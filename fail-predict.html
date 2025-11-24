@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M0NARQ | FailPredict</title>
+    <link rel="stylesheet" href="styles.css">
+    <style> :root { --accent: #E0E0E0; } </style>
+</head>
+<body>
+    <div class="preloader"><p class="mono">ANALYZING HARMONICS...</p></div>
+    
+    <button class="nav-island" onclick="toggleMenu()">
+        <div class="nav-icon"></div><span class="nav-label">MENU</span>
+    </button>
+    <div class="fullscreen-menu" id="fsMenu">
+        <button class="menu-close" onclick="toggleMenu()">X</button>
+        <ul class="menu-list">
+            <li class="menu-item"><a href="index.html" class="menu-link">M0NARQ</a></li>
+            <li class="menu-item"><a href="#" class="menu-link sub">FinancialReader AI</a></li>
+            <li class="menu-item"><a href="index.html" class="menu-link sub" style="color:var(--accent); opacity:1;">Industrial AI</a></li>
+            <li class="menu-item" style="margin-top:2rem"><a href="qc-vision.html" class="menu-link" style="font-size:2rem;">01. QC Vision</a></li>
+            <li class="menu-item"><a href="power-guard.html" class="menu-link" style="font-size:2rem;">02. PowerGuard</a></li>
+            <li class="menu-item"><a href="fail-predict.html" class="menu-link" style="font-size:2rem;">03. FailPredict</a></li>
+        </ul>
+    </div>
+
+    <section id="hero" class="bg-black">
+        <img src="fail-predict1.webp" class="hero-bg">
+        <div class="container">
+            <span class="module-tag reveal">MODULE 03</span>
+            <h1 class="reveal">FAIL PREDICT</h1>
+            <p class="reveal">Condition-based predictive maintenance.<br><span style="color:#E0E0E0">5 Hour Warning. 9.2x ROI.</span></p>
+        </div>
+    </section>
+
+    <section class="bg-white section-padding">
+        <div class="container">
+            <div class="split-layout reveal">
+                <div>
+                    <h2 style="color:var(--black)">PHYSICS OF FAILURE</h2>
+                    <p style="color:#333">
+                        Mechanical faults (like a pitted bearing) create specific vibration frequencies long before they generate heat. By attaching a $1.60 MEMS sensor (MPU-6050) to the motor housing, we detect these micro-harmonics.
+                    </p>
+                    <div class="stat-grid">
+                        <div class="stat-item" style="border-color:#999">
+                            <h3 style="color:var(--black)">5 HR</h3>
+                            <p class="mono" style="color:#555">WARNING TIME</p>
+                        </div>
+                        <div class="stat-item" style="border-color:#999">
+                            <h3 style="color:var(--black)">9.2x</h3>
+                            <p class="mono" style="color:#555">YEAR 1 ROI</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <img src="fail-predict2.webp" class="content-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-black section-padding">
+        <div class="container">
+            <h2 class="reveal">INFERENCE LOGIC</h2>
+            <div class="split-layout reveal">
+                <div>
+                    <div class="code-wrapper" style="border-left-color: #E0E0E0;">
+<div class="code-block">
+<span class="k">def</span> <span class="f">predict_rul</span>(sensor_data):
+    <span class="c"># 1. Load Pretrained GRU Model (NASA CMAPSS)</span>
+    model = torch.load(<span class="s">"models/gru_rul.pt"</span>)
+    
+    <span class="c"># 2. Extract Spectral Features (FFT)</span>
+    vib_features = extract_features(sensor_data[<span class="s">'vibration'</span>])
+    
+    <span class="c"># 3. Physics-Informed Constraint</span>
+    rul_raw = model(torch.from_numpy(vib_features))
+    rul_constrained = pi_transformer(rul_raw)
+    
+    <span class="c"># 4. Traffic Light Logic</span>
+    <span class="k">if</span> rul_constrained < <span class="n">1.0</span>:
+        status = <span class="s">"CRITICAL_STOP"</span>
+    <span class="k">elif</span> rul_constrained < <span class="n">4.0</span>:
+        status = <span class="s">"WARNING_MAINTAIN_SOON"</span>
+        
+    <span class="k">return</span> {<span class="s">"rul_hours"</span>: round(rul_constrained, <span class="n">2</span>)}
+</div>
+                    </div>
+                </div>
+                <div>
+                    <ul style="list-style:none; border-top:1px solid #333; padding-top:2rem">
+                        <li style="margin-bottom:2rem">
+                            <span class="mono" style="color:#E0E0E0">FEATURE EXTRACTION</span>
+                            <p><strong>Spectral Analysis (FFT).</strong> We don't just look at magnitude; we look at frequency spikes. A spike at 500Hz often indicates a bearing race fault.</p>
+                        </li>
+                        <li style="margin-bottom:2rem">
+                            <span class="mono" style="color:#E0E0E0">NEURAL CORE</span>
+                            <p><strong>GRU-128.</strong> Trained on NASA CMAPSS jet engine data, then Transfer-Learned for textile sewing heads to predict Remaining Useful Life (RUL).</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="bg-black section-padding" style="border-top:1px solid #333">
+        <div class="container" style="text-align:center">
+            <h2 class="mono" style="letter-spacing:0.2em">M0NARQ.AI</h2>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
+
