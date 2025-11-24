@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M0NARQ | QC Vision</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="preloader"><p class="mono">LOADING MICROVIT...</p></div>
+    
+    <button class="nav-island" onclick="toggleMenu()">
+        <div class="nav-icon"></div><span class="nav-label">MENU</span>
+    </button>
+    <!-- [Insert Fullscreen Menu from Index here for brevity, exact same HTML] -->
+     <div class="fullscreen-menu" id="fsMenu">
+        <button class="menu-close" onclick="toggleMenu()">X</button>
+        <ul class="menu-list">
+            <li class="menu-item"><a href="index.html" class="menu-link">M0NARQ</a></li>
+            <li class="menu-item"><a href="#" class="menu-link sub">FinancialReader AI</a></li>
+            <li class="menu-item"><a href="index.html" class="menu-link sub" style="color:var(--accent); opacity:1;">Industrial AI</a></li>
+            <li class="menu-item" style="margin-top:2rem"><a href="qc-vision.html" class="menu-link" style="font-size:2rem;">01. QC Vision</a></li>
+            <li class="menu-item"><a href="power-guard.html" class="menu-link" style="font-size:2rem;">02. PowerGuard</a></li>
+            <li class="menu-item"><a href="fail-predict.html" class="menu-link" style="font-size:2rem;">03. FailPredict</a></li>
+        </ul>
+    </div>
+
+    <section id="hero" class="bg-black">
+        <img src="realsamiul/industrialaione/IndustrialAIOne-75cfdae3d15c19ec3ee665d733f44597aa15c554/qc-vision1.webp" class="hero-bg">
+        <div class="container">
+            <span class="module-tag reveal">MODULE 01</span>
+            <h1 class="reveal">QC VISION</h1>
+            <p class="reveal">Real-time fabric defect detection on commodity edge hardware.<br><span class="teal">28ms Inference. 92% F1 Score.</span></p>
+        </div>
+    </section>
+
+    <section class="bg-white section-padding">
+        <div class="container">
+            <div class="split-layout reveal">
+                <div>
+                    <h2 style="color:var(--black)">FRUGAL INNOVATION</h2>
+                    <p style="color:#333">
+                        <strong>The Leakage:</strong> RMG factories lose 3-5% of total yardage to defects. Imported AOI rigs cost >$12,000.
+                    </p>
+                    <p style="color:#333">
+                        <strong>The Disruption:</strong> By utilizing recycled Android smartphones (Snapdragon 778G+) as vision sensors, we lower the CAPEX to ~$150. We process locally to ensure data sovereignty.
+                    </p>
+                </div>
+                <div>
+                    <img src="realsamiul/industrialaione/IndustrialAIOne-75cfdae3d15c19ec3ee665d733f44597aa15c554/qc-vision2.webp" class="content-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-black section-padding">
+        <div class="container">
+            <h2 class="reveal">THE STACK</h2>
+            <div class="split-layout reveal">
+                <div>
+                    <div class="code-wrapper">
+<div class="code-block">
+<span class="k">@app.cls</span>(gpu=<span class="s">"T4"</span>)
+<span class="k">class</span> <span class="f">DefectDetector</span>:
+    <span class="k">def</span> <span class="f">__enter__</span>(self):
+        <span class="c"># Load 8-bit Quantized ONNX Weights</span>
+        vit_path = hf_download(<span class="s">"ai-one/microvit-cloth-q8"</span>)
+        self.vit = ort.InferenceSession(vit_path)
+        
+        <span class="c"># Hybrid: YOLOv8 Nano for classification + SAM</span>
+        self.yolo = YOLO(<span class="s">"/models/yolov8n-fabric.pt"</span>)
+
+    <span class="k">def</span> <span class="f">detect</span>(self, img_array):
+        results = self.yolo(img_array)
+        grade = <span class="s">"A"</span>
+        
+        <span class="k">for</span> r <span class="k">in</span> results:
+            <span class="c"># Economic logic: Reject roll if Critical</span>
+            severity = self.severity_map.get(r.defect_type)
+            <span class="k">if</span> severity == <span class="s">"critical"</span>:
+                grade = <span class="s">"D"</span> 
+                
+        <span class="k">return</span> {
+            <span class="s">"quality_grade"</span>: grade,
+            <span class="s">"export_eligible"</span>: grade <span class="k">in</span> [<span class="s">"A"</span>, <span class="s">"B"</span>],
+            <span class="s">"loss_usd"</span>: self.calc_loss(grade)
+        }
+</div>
+                    </div>
+                </div>
+                <div>
+                    <ul style="list-style:none; border-top:1px solid #333; padding-top:2rem">
+                        <li style="margin-bottom:2rem">
+                            <span class="mono teal">BACKBONE</span>
+                            <p><strong>MicroViT-Tiny-Q8.</strong> We utilize 8-bit quantization to run Transformers on CPUs, achieving a 3.6x speedup over DINO-v2.</p>
+                        </li>
+                        <li style="margin-bottom:2rem">
+                            <span class="mono teal">SEGMENTATION</span>
+                            <p><strong>PicoSAM-2.</strong> Enables "Human-in-the-Loop". QA managers can tap a defect on the tablet to instantly refine the model locally.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="bg-black section-padding" style="border-top:1px solid #333">
+        <div class="container" style="text-align:center">
+            <h2 class="mono" style="letter-spacing:0.2em">M0NARQ.AI</h2>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
+
