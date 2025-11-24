@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M0NARQ | PowerGuard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="preloader"><p class="mono">CONNECTING TO GRID...</p></div>
+    
+    <button class="nav-island" onclick="toggleMenu()">
+        <div class="nav-icon"></div><span class="nav-label">MENU</span>
+    </button>
+    <div class="fullscreen-menu" id="fsMenu">
+        <button class="menu-close" onclick="toggleMenu()">X</button>
+        <ul class="menu-list">
+            <li class="menu-item"><a href="index.html" class="menu-link">M0NARQ</a></li>
+            <li class="menu-item"><a href="#" class="menu-link sub">FinancialReader AI</a></li>
+            <li class="menu-item"><a href="index.html" class="menu-link sub" style="color:var(--accent); opacity:1;">Industrial AI</a></li>
+            <li class="menu-item" style="margin-top:2rem"><a href="qc-vision.html" class="menu-link" style="font-size:2rem;">01. QC Vision</a></li>
+            <li class="menu-item"><a href="power-guard.html" class="menu-link" style="font-size:2rem;">02. PowerGuard</a></li>
+            <li class="menu-item"><a href="fail-predict.html" class="menu-link" style="font-size:2rem;">03. FailPredict</a></li>
+        </ul>
+    </div>
+
+    <section id="hero" class="bg-black">
+        <img src="power-guard1.webp" class="hero-bg">
+        <div class="container">
+            <span class="module-tag reveal">MODULE 02</span>
+            <h1 class="reveal">POWER GUARD</h1>
+            <p class="reveal">High-frequency energy analytics and forecasting.<br><span class="accent">EU CBAM & DPP Compliant.</span></p>
+        </div>
+    </section>
+
+    <section class="bg-white section-padding">
+        <div class="container">
+            <div class="split-layout reveal">
+                <div>
+                    <h2 style="color:var(--black)">THE ENERGY CRISIS</h2>
+                    <p style="color:#333">
+                        Factories in Gazipur operate at 30% capacity due to LNG shortages. Captive diesel generation costs $0.32/kWh. Using the PZEM-004T split-core sensor, we monitor power at 1Hz.
+                    </p>
+                    <p style="color:#333">
+                        <strong>Peak Shaving:</strong> This enables automated shedding of non-critical loads 180 seconds *before* a spike trips the generator, saving roughly $180/month per line.
+                    </p>
+                </div>
+                <div>
+                    <img src="power-guard2.webp" class="content-image" style="filter:invert(0)">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-black section-padding">
+        <div class="container">
+            <h2 class="reveal">ANALYTICS PIPELINE</h2>
+            <div class="split-layout reveal">
+                <div>
+                    <ul style="list-style:none; border-top:1px solid #333; padding-top:2rem">
+                        <li style="margin-bottom:2rem">
+                            <span class="mono accent">VECTORIZATION</span>
+                            <p><strong>TS2Vec + MOMEMTO.</strong> Traditional forecasting fails due to "concept drift". Our memory gate patch allows the model to retain a baseline over months of operation.</p>
+                        </li>
+                        <li style="margin-bottom:2rem">
+                            <span class="mono accent">CHANGE POINT</span>
+                            <p><strong>Bayesian CPD.</strong> Identifies structural changes in consumption patterns (e.g., a motor seizing up) to trigger preventative maintenance.</p>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="code-wrapper" style="border-left-color: var(--accent);">
+<div class="code-block">
+<span class="k">class</span> <span class="f">PowerMonitor</span>:
+    <span class="k">def</span> <span class="f">__enter__</span>(self):
+        self.ts2vec = TS2Vec(input_dims=<span class="n">1</span>, output_dims=<span class="n">64</span>)
+        
+    <span class="k">def</span> <span class="f">analyze_stream</span>(self, readings):
+        <span class="c"># 1. Vectorize Data Stream</span>
+        vec = self.ts2vec.encode(readings)
+        
+        <span class="c"># 2. Bayesian Change Point Detection</span>
+        bkpts = rpt.Pelt(model=<span class="s">"rbf"</span>).fit(vec).predict(pen=<span class="n">3</span>)
+        
+        <span class="c"># 3. Tariff Logic (Peak vs Off-Peak)</span>
+        is_peak = <span class="n">17</span> <= datetime.now().hour <= <span class="n">23</span>
+        
+        <span class="k">return</span> {
+            <span class="s">"surge_detected"</span>: error[-1] > <span class="n">2.5</span> * sigma,
+            <span class="s">"action"</span>: <span class="s">"ACTIVATE_GENERATOR"</span> <span class="k">if</span> is_peak <span class="k">else</span> <span class="s">"MONITOR"</span>
+        }
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="bg-black section-padding" style="border-top:1px solid #333">
+        <div class="container" style="text-align:center">
+            <h2 class="mono" style="letter-spacing:0.2em">M0NARQ.AI</h2>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
+
