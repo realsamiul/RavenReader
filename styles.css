@@ -36,13 +36,6 @@ p { font-size: clamp(1rem, 4vw, 1.1rem); margin-bottom: 1.5rem; opacity: 0.85; m
 .teal { color: var(--teal); }
 .outline-text { -webkit-text-stroke: 1px rgba(255,255,255,0.2); color: transparent; }
 
-/* --- LAYOUT --- */
-.container { width: 90%; max-width: 1400px; margin: 0 auto; position: relative; z-index: 2;}
-.section-padding { padding: 15vh 0; }
-.bg-white { background-color: var(--white); color: var(--black); }
-.bg-black { background-color: var(--black); color: var(--white); }
-.split-layout { display: grid; grid-template-columns: 1fr; gap: 4rem; }
-
 /* --- HERO --- */
 #hero { 
     min-height: 100vh; 
@@ -52,15 +45,57 @@ p { font-size: clamp(1rem, 4vw, 1.1rem); margin-bottom: 1.5rem; opacity: 0.85; m
     position: relative; 
     overflow: hidden;
 }
+
 .hero-bg { 
     position: absolute; 
-    top: 0; left: 0; 
-    width: 100%; height: 100%; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
     object-fit: cover; 
-    opacity: 0.4; 
-    z-index: 0; 
-    filter: grayscale(100%); 
-    transform: scale(1.1);
+    opacity: 1; 
+    filter: grayscale(0%) saturate(150%) brightness(0.6); /* Make image vivid and slightly darkened */
+    transform: scale(1);
+    z-index: 0; /* Ensures the image stays in the background */
+}
+
+/* --- Overlay for Text Contrast --- */
+.hero-bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black overlay for contrast */
+    z-index: 1; /* Above the image but below the text */
+}
+
+/* --- TEXT STYLING --- */
+h1, h2, h3, p {
+    color: var(--white); /* White text color */
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8); /* Dark shadow for text legibility */
+    z-index: 2; /* Ensure text is above the overlay */
+}
+
+h1 {
+    font-size: clamp(3.5rem, 12vw, 8rem); 
+    margin-bottom: 1rem;
+    text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.9); /* More intense shadow for main headers */
+}
+
+h2 {
+    font-size: clamp(2rem, 6vw, 4rem); 
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+p {
+    font-size: clamp(1rem, 4vw, 1.1rem); 
+    margin-bottom: 1.5rem; 
+    opacity: 0.85; 
+    max-width: 60ch; 
+    line-height: 1.7;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Subtle shadow for paragraphs */
 }
 
 /* --- MODULES & CARDS --- */
@@ -74,26 +109,10 @@ p { font-size: clamp(1rem, 4vw, 1.1rem); margin-bottom: 1.5rem; opacity: 0.85; m
 }
 .bg-white .module-tag { background: var(--black); color: var(--white); }
 
-/* --- CODE BLOCK --- */
-.code-wrapper { 
-    background: #111; 
-    padding: 2rem; 
-    border-radius: 4px; 
-    border-left: 3px solid var(--accent); 
-    margin: 2rem 0; 
-    overflow-x: auto; 
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-.code-block { font-family: var(--font-mono); font-size: 0.85rem; color: #d4d4d4; line-height: 1.6; white-space: pre; }
-.k { color: #569cd6; } .f { color: #dcdcaa; } .s { color: #ce9178; } .c { color: #6a9955; } .n { color: #b5cea8; }
-
 /* --- STATS GRID --- */
 .stat-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 2rem;}
 .bg-white .stat-grid { border-color: rgba(0,0,0,0.2); }
 .stat-item h3 { font-size: 3rem; margin-bottom: 0.5rem; line-height: 1; }
-
-/* --- IMAGES --- */
-.content-image { width: 100%; height: auto; border-radius: 4px; margin: 2rem 0; opacity: 0.9; }
 
 /* --- NAVIGATION (DYNAMIC ISLAND) --- */
 .nav-island {
@@ -108,25 +127,6 @@ p { font-size: clamp(1rem, 4vw, 1.1rem); margin-bottom: 1.5rem; opacity: 0.85; m
 .nav-island:hover { transform: scale(1.05); }
 .nav-icon { width: 12px; height: 12px; background: var(--black); border-radius: 50%; }
 .nav-label { font-family: var(--font-mono); font-weight: bold; letter-spacing: 0.1em; font-size: 0.8rem;}
-
-.fullscreen-menu {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: var(--black); z-index: 998;
-    display: flex; flex-direction: column; justify-content: center; padding: 10%;
-    opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
-}
-.fullscreen-menu.active { opacity: 1; pointer-events: all; }
-.menu-list { list-style: none; }
-.menu-item { margin-bottom: 1rem; opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
-.menu-link { text-decoration: none; color: var(--white); font-size: clamp(2rem, 6vw, 5rem); font-weight: 700; transition: color 0.3s; line-height: 1.1; }
-.menu-link:hover { color: var(--accent); }
-.menu-link.sub { font-size: clamp(1rem, 2vw, 1.5rem); font-family: var(--font-mono); opacity: 0.5; font-weight: 400; display: block; margin-top: 1rem;}
-.menu-close {
-    position: absolute; top: 2rem; right: 2rem;
-    background: transparent; border: 1px solid rgba(255,255,255,0.2);
-    color: var(--white); width: 50px; height: 50px; border-radius: 50%;
-    cursor: pointer; font-family: var(--font-mono);
-}
 
 /* --- PRELOADER --- */
 .preloader {
