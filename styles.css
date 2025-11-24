@@ -21,14 +21,14 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
-    overflow-x: hidden; /* Critical for preventing horizontal scroll */
+    overflow-x: hidden; /* Critical fix for horizontal scroll */
 }
 
 body {
     font-family: var(--font-main);
     background-color: var(--black);
     color: var(--white);
-    overflow-x: hidden; /* Double insurance */
+    overflow-x: hidden; /* Critical fix */
     width: 100%;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -41,23 +41,24 @@ h1, h2, h3, h4 {
     line-height: 1.1;
 }
 
+/* Responsive Typography using Clamp */
 h1 {
-    font-size: clamp(2.5rem, 8vw, 6rem); /* Responsive scaling */
+    font-size: clamp(2.5rem, 10vw, 6rem);
     margin-bottom: 1rem;
 }
 
 h2 {
-    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    font-size: clamp(1.8rem, 6vw, 3.5rem);
     margin-bottom: 2rem;
 }
 
 h3 {
-    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-size: clamp(1.2rem, 4vw, 2rem);
     margin-bottom: 1rem;
 }
 
 p {
-    font-size: clamp(1rem, 2vw, 1.15rem);
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
     margin-bottom: 1.5rem;
     opacity: 0.85;
     max-width: 65ch;
@@ -80,7 +81,7 @@ p {
 
 /* --- LAYOUT --- */
 .container {
-    width: 90%; /* Mobile default */
+    width: 90%;
     max-width: 1400px;
     margin: 0 auto;
     position: relative;
@@ -88,20 +89,19 @@ p {
 }
 
 .section-padding {
-    padding: 10vh 0; /* Reduced slightly for mobile */
+    padding: 10vh 0;
 }
 
 .bg-white { background-color: var(--white); color: var(--black); }
 .bg-black { background-color: var(--black); color: var(--white); }
 
-/* Grid System - Mobile First (Stacked) */
+/* Mobile First Grid System */
 .split-layout {
     display: flex;
     flex-direction: column;
     gap: 3rem;
 }
 
-/* Desktop Grid */
 @media (min-width: 900px) {
     .split-layout {
         display: grid;
@@ -109,7 +109,6 @@ p {
         gap: 6rem;
         align-items: center;
     }
-    
     .section-padding {
         padding: 15vh 0;
     }
@@ -117,8 +116,8 @@ p {
 
 /* --- HERO --- */
 #hero {
-    min-height: 100vh; /* Ensure full height */
-    /* Mobile fix for 100vh toolbar issues */
+    min-height: 100vh;
+    /* Mobile viewport fix */
     min-height: 100dvh; 
     display: flex;
     flex-direction: column;
@@ -136,7 +135,7 @@ p {
     object-fit: cover;
     opacity: 0.4;
     z-index: 0;
-    /* Removed scale transform to prevent overflow issues */
+    /* Removed transform scale to prevent overflow */
 }
 
 /* --- MODULES & CARDS --- */
@@ -166,8 +165,8 @@ p {
     border-radius: 4px;
     border-left: 3px solid var(--accent);
     margin: 2rem 0;
-    width: 100%; /* Prevent horizontal blowout */
-    overflow-x: auto; /* Allow code to scroll internally */
+    width: 100%;
+    overflow-x: auto; /* Handles horizontal scroll internally */
     box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
@@ -176,9 +175,9 @@ p {
     font-size: 0.8rem;
     color: #d4d4d4;
     line-height: 1.5;
-    white-space: pre; /* Keeps code formatting */
+    white-space: pre;
 }
-/* Syntax Highlighting */
+
 .k { color: #569cd6; }
 .f { color: #dcdcaa; }
 .s { color: #ce9178; }
@@ -188,7 +187,7 @@ p {
 /* --- STATS GRID --- */
 .stat-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Mobile: 1 column */
+    grid-template-columns: 1fr; /* Stacked by default */
     gap: 2rem;
     margin-top: 3rem;
     border-top: 1px solid rgba(255,255,255,0.2);
@@ -197,18 +196,14 @@ p {
 .bg-white .stat-grid { border-color: rgba(0,0,0,0.2); }
 
 @media (min-width: 600px) {
-    .stat-grid {
-        grid-template-columns: repeat(2, 1fr); /* Tablet: 2 cols */
-    }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 900px) {
-    .stat-grid {
-        grid-template-columns: repeat(3, 1fr); /* Desktop: 3 cols */
-    }
+    .stat-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 .stat-item h3 {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(2rem, 5vw, 3rem);
     margin-bottom: 0.5rem;
     line-height: 1;
 }
@@ -221,13 +216,14 @@ p {
     margin: 1rem 0;
     opacity: 0.9;
     display: block;
+    max-width: 100%; /* Prevent blowout */
 }
 
 /* --- NAVIGATION --- */
 .nav-island {
     position: fixed;
     bottom: 2rem;
-    right: 2rem; /* Default right */
+    right: 2rem;
     z-index: 999;
     background: var(--white);
     color: var(--black);
@@ -243,7 +239,7 @@ p {
     transition: transform 0.2s;
 }
 
-/* Mobile Center Nav */
+/* Center nav on mobile */
 @media (max-width: 500px) {
     .nav-island {
         left: 50%;
@@ -252,9 +248,6 @@ p {
         bottom: 1.5rem;
         width: auto;
         white-space: nowrap;
-    }
-    .nav-island:active {
-        transform: translateX(-50%) scale(0.95);
     }
 }
 
@@ -283,7 +276,7 @@ p {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 2rem; /* More padding on mobile */
+    padding: 2rem;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
@@ -304,7 +297,7 @@ p {
 .menu-link {
     text-decoration: none;
     color: var(--white);
-    font-size: clamp(2rem, 8vw, 4rem); /* Responsive font size */
+    font-size: clamp(2rem, 8vw, 4rem);
     font-weight: 700;
     transition: color 0.3s;
     line-height: 1.1;
@@ -363,4 +356,5 @@ p {
     opacity: 1;
     transform: translateY(0);
 }
+
 
