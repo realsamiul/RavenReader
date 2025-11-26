@@ -34,25 +34,28 @@
         </div>
     </section>
 
+    <!-- PHYSICS OF FAILURE -->
     <section class="bg-white section-padding">
         <div class="container">
             <div class="split-layout reveal">
                 <div>
-                    <h2 style="color:var(--black)">PHYSICS OF FAILURE</h2>
+                    <h2 style="color:var(--black)">PREDICTING THE INVISIBLE.</h2>
                     <p style="color:#333">
-                        Mechanical faults (like a pitted bearing or misaligned shaft) emit specific <strong>micro-harmonics</strong> long before they generate audible noise or heat. By attaching a <strong>$1.60 MEMS sensor (MPU-6050)</strong> to the motor housing, we capture 3-axis acceleration data. [attachment_0](attachment)
+                        Mechanical faults (pitted bearings, misaligned shafts) emit <strong>micro-harmonics</strong> long before they generate heat or noise.  By attaching a <strong>$1.60 MEMS sensor (MPU-6050)</strong>, we capture 3-axis acceleration data.
                     </p>
                     <p style="color:#333">
-                        Using <strong>Fast Fourier Transform (FFT)</strong>, we decompose this vibration data into frequency spectrums. A spike at a specific frequency (e.g., 500Hz) acts as a fingerprint for specific failure modes like bearing race degradation, allowing us to predict failure <strong>5 hours</strong> before it occurs.
+                        <strong>From Reactive to Predictive:</strong> In our Narayanganj pilot, we reduced spindle downtime from 23 hours/month to just <strong>9 hours</strong>. This moves maintenance from "fix it when it breaks" (costly outage) to "fix it during lunch break" (zero loss).
                     </p>
                     <div class="stat-grid">
                         <div class="stat-item" style="border-color:#999">
                             <h3 style="color:var(--black)">5 HR</h3>
-                            <p class="mono" style="color:#555">WARNING TIME</p>
+                            <p class="mono" style="color:#555">LEAD TIME</p>
+                            <p style="font-size:0.75rem; color:#666">Warning before critical failure.</p>
                         </div>
                         <div class="stat-item" style="border-color:#999">
-                            <h3 style="color:var(--black)">9.2x</h3>
-                            <p class="mono" style="color:#555">YEAR 1 ROI</p>
+                            <h3 style="color:var(--black)">$1,840</h3>
+                            <p class="mono" style="color:#555">SAVED/MO</p>
+                            <p style="font-size:0.75rem; color:#666">Avoided downtime costs.</p>
                         </div>
                     </div>
                 </div>
@@ -63,46 +66,41 @@
         </div>
     </section>
 
+    <!-- INFERENCE LOGIC -->
     <section class="bg-black section-padding">
         <div class="container">
-            <h2 class="reveal">INFERENCE LOGIC</h2>
+            <h2 class="reveal">THE INDUSTRIAL BRAIN</h2>
             <div class="split-layout reveal">
                 <div>
                     <div class="code-wrapper" style="border-left-color: #E0E0E0;">
 <div class="code-block">
 <span class="k">def</span> <span class="f">predict_rul</span>(sensor_data):
-    <span class="c"># 1. Load Pretrained GRU Model (NASA CMAPSS)</span>
-    <span class="c"># Transfer Learning: Jet engine physics -> Textile motors</span>
-    model = torch.load(<span class="s">"models/gru_rul.pt"</span>)
+    <span class="c"># 1. Spectral Analysis (FFT)</span>
+    <span class="c"># Convert vibration to frequency domain</span>
+    harmonics = fft(sensor_data)
     
-    <span class="c"># 2. Extract Spectral Features (FFT)</span>
-    <span class="c"># Convert raw vibration to frequency domain</span>
-    vib_features = extract_features(sensor_data[<span class="s">'vibration'</span>])
+    <span class="c"># 2. Physics-Informed Constraint (Pi-Transformer)</span>
+    <span class="c"># Ensures prediction follows degradation physics</span>
+    rul_raw = gru_model(harmonics)
+    rul = pi_transformer(rul_raw)
     
-    <span class="c"># 3. Physics-Informed Constraint (Pi-Transformer)</span>
-    <span class="c"># Ensure prediction obeys degradation physics</span>
-    rul_raw = model(torch.from_numpy(vib_features))
-    rul_constrained = pi_transformer(rul_raw)
-    
-    <span class="c"># 4. Traffic Light Logic</span>
-    <span class="k">if</span> rul_constrained < <span class="n">1.0</span>:
-        status = <span class="s">"CRITICAL_STOP"</span>
-    <span class="k">elif</span> rul_constrained < <span class="n">4.0</span>:
-        status = <span class="s">"WARNING_MAINTAIN_SOON"</span>
+    <span class="c"># 3. Action Logic</span>
+    <span class="k">if</span> rul < <span class="n">5.0</span>:
+        <span class="k">return</span> <span class="s">"SCHEDULE_MAINTENANCE_TONIGHT"</span>
         
-    <span class="k">return</span> {<span class="s">"rul_hours"</span>: round(rul_constrained, <span class="n">2</span>)}
+    <span class="k">return</span> {<span class="s">"rul_hours"</span>: round(rul, <span class="n">2</span>)}
 </div>
                     </div>
                 </div>
                 <div>
                     <ul style="list-style:none; border-top:1px solid #333; padding-top:2rem">
                         <li style="margin-bottom:2rem">
-                            <span class="mono" style="color:#E0E0E0">FEATURE EXTRACTION</span>
-                            <p><strong>Spectral Analysis (FFT).</strong> We don't just look at magnitude; we scrutinize the frequency domain. Analyzing the spectrum allows us to isolate specific mechanical components (inner race, outer race, cage) based on their rotational frequencies.</p>
+                            <span class="mono" style="color:#E0E0E0">PI-TRANSFORMER</span>
+                            <p><strong>Physics-Informed AI.</strong> Standard AI can hallucinate. We add a <strong>Physics-Informed (Pi)</strong> head to our GRU model. This constrains predictions to obey the laws of material degradation, ensuring the AI never predicts "self-healing" machines.</p>
                         </li>
                         <li style="margin-bottom:2rem">
-                            <span class="mono" style="color:#E0E0E0">NEURAL CORE</span>
-                            <p><strong>GRU-128 + Pi-Transformer.</strong> We utilize a Gated Recurrent Unit (GRU) trained on the <strong>NASA CMAPSS</strong> jet engine dataset. Through transfer learning, we adapt this model to textile motors. The <strong>Physics-Informed (Pi)</strong> head acts as a guardrail, ensuring the AI's predictions align with the known laws of material degradation.</p>
+                            <span class="mono" style="color:#E0E0E0">FEDERATED LEARNING</span>
+                            <p><strong>Collaborative Intelligence.</strong> A factory in Chittagong can learn a new failure mode, and that "wisdom" is securely shared with your factory in Dhaka via encrypted gradients.  Your raw data never leaves your premise, but your AI gets smarter every night.</p>
                         </li>
                     </ul>
                 </div>
