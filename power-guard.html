@@ -33,26 +33,39 @@
         </div>
     </section>
 
+    <!-- THE CRISIS -->
     <section class="bg-white section-padding">
         <div class="container">
             <div class="split-layout reveal">
                 <div>
-                    <h2 style="color:var(--black)">THE ENERGY CRISIS</h2>
+                    <h2 style="color:var(--black)">THE ARBITRAGE CRISIS.</h2>
                     <p style="color:#333">
-                        Factories in Gazipur often operate at <30% capacity due to chronic LNG shortages. To maintain uptime, they rely on captive diesel generation which costs <strong>$0.32/kWh</strong>—nearly triple the grid rate of <strong>$0.12/kWh</strong>. Unmonitored machinery contributes to a 12-15% energy overspend. 
+                        Factories in Gazipur often operate at <30% capacity due to LNG shortages. The alternative—captive diesel generation—costs <strong>$0.32/kWh</strong>, nearly triple the grid rate of <strong>$0.12/kWh</strong>.
                     </p>
                     <p style="color:#333">
-                        <strong>Peak Shaving Strategy:</strong> Using the <strong>PZEM-004T</strong> split-core sensor ($9), we monitor power quality at 1Hz. The system predicts load spikes 180 seconds in advance, allowing for automated "load shedding" of non-critical systems (like ACs) to prevent tripping generators. This saves roughly <strong>$180/month per line</strong>.
+                        <strong>Peak Shaving Strategy:</strong> Using the <strong>PZEM-004T</strong> split-core sensor ($9), we monitor power quality at 1Hz. The system predicts load spikes <strong>180 seconds</strong> in advance, allowing for automated "load shedding" of non-critical systems (ACs, exhaust) to prevent tripping generators.
                     </p>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <h3 style="color:var(--black)">$180</h3>
+                            <p class="mono" style="color:#555">SAVED PER LINE/MO</p>
+                            <p style="font-size:0.75rem; color:#666">Through 15% energy reduction.</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 style="color:var(--black)">100%</h3>
+                            <p class="mono" style="color:#555">AUDIT READY</p>
+                            <p style="font-size:0.75rem; color:#666">Immutable Parquet logs for EU.</p>
+                        </div>
+                    </div>
                 </div>
                 <div>
-                    <!-- REMOVED FILTER INVERT HERE -->
                     <img src="power-guard2.webp" class="content-image" alt="Graph showing energy spike prediction">
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ANALYTICS PIPELINE -->
     <section class="bg-black section-padding">
         <div class="container">
             <h2 class="reveal">ANALYTICS PIPELINE</h2>
@@ -60,16 +73,16 @@
                 <div>
                     <ul style="list-style:none; border-top:1px solid #333; padding-top:2rem">
                         <li style="margin-bottom:2rem">
-                            <span class="mono accent">VECTORIZATION</span>
-                            <p><strong>TS2Vec + MOMEMTO.</strong> Raw power data is noisy. We use TS2Vec to convert time-series data into vector embeddings. The <strong>MOMEMTO (Memory Gate)</strong> patch is crucial—it prevents the model from "forgetting" baseline behavior over weeks of operation (Concept Drift), ensuring stable anomaly detection without constant retraining.</p>
+                            <span class="mono accent">SOLVING CONCEPT DRIFT</span>
+                            <p><strong>TS2Vec + MOMEMTO.</strong> Traditional forecasting fails as machines wear out and patterns change ("Concept Drift"). We use TS2Vec with a <strong>Memory Gate (MOMEMTO)</strong> to stabilize learning, ensuring the model doesn't over-generalize or "forget" the baseline behavior over weeks of operation.</p>
                         </li>
                         <li style="margin-bottom:2rem">
-                            <span class="mono accent">CHANGE POINT</span>
-                            <p><strong>Bayesian CPD.</strong> We use Bayesian Change Point Detection algorithms to identify structural shifts in energy consumption (e.g., a motor seizing up or a belt slipping) distinct from normal fluctuations.</p>
+                            <span class="mono accent">CHANGE POINT DETECTION</span>
+                            <p><strong>Bayesian CPD.</strong> We use Bayesian algorithms to identify structural shifts in consumption—distinguishing between a normal cycle change and a motor seizing up.</p>
                         </li>
                         <li style="margin-bottom:2rem">
-                            <span class="mono accent">COMPLIANCE</span>
-                            <p><strong>Digital Product Passport.</strong> Energy logs are saved in immutable Parquet format, providing the granular data required for EU CBAM audits.</p>
+                            <span class="mono accent">COMPLIANCE ENGINE</span>
+                            <p><strong>EU Digital Product Passport.</strong> Energy logs are cryptographically signed and saved in Parquet format. This allows you to generate a "Green Certificate" per batch, satisfying strict EU CBAM audits.</p>
                         </li>
                     </ul>
                 </div>
@@ -77,27 +90,20 @@
                     <div class="code-wrapper" style="border-left-color: var(--accent);">
 <div class="code-block">
 <span class="k">class</span> <span class="f">PowerMonitor</span>:
-    <span class="k">def</span> <span class="f">__enter__</span>(self):
-        <span class="c"># Initialize Time-Series Vectorizer</span>
-        self.ts2vec = TS2Vec(input_dims=<span class="n">1</span>, output_dims=<span class="n">64</span>)
-        
     <span class="k">def</span> <span class="f">analyze_stream</span>(self, readings):
-        <span class="c"># 1. Vectorize Data Stream</span>
-        <span class="c"># Convert raw watts into a vector embedding</span>
+        <span class="c"># 1. Vectorize Data Stream (TS2Vec)</span>
+        <span class="c"># Handles concept drift via Memory Gate</span>
         vec = self.ts2vec.encode(readings)
         
-        <span class="c"># 2. Bayesian Change Point Detection</span>
-        <span class="c"># Detect structural shifts (e.g., machine start/stop)</span>
-        bkpts = rpt.Pelt(model=<span class="s">"rbf"</span>).fit(vec).predict(pen=<span class="n">3</span>)
-        
-        <span class="c"># 3. Tariff Logic (Peak vs Off-Peak)</span>
-        <span class="c"># Bangladesh Grid Peak: 17:00 - 23:00</span>
+        <span class="c"># 2. Tariff Logic (Bangladesh Context)</span>
+        <span class="c"># Peak: 17:00 - 23:00 ($0.12/kWh)</span>
         is_peak = <span class="n">17</span> <= datetime.now().hour <= <span class="n">23</span>
         
-        <span class="k">return</span> {
-            <span class="s">"surge_detected"</span>: error[-1] > <span class="n">2.5</span> * sigma,
-            <span class="s">"action"</span>: <span class="s">"ACTIVATE_GENERATOR"</span> <span class="k">if</span> is_peak <span class="k">else</span> <span class="s">"MONITOR"</span>
-        }
+        <span class="c"># 3. Peak Shaving Logic</span>
+        <span class="k">if</span> is_peak <span class="k">and</span> prediction.spike_prob > <span class="n">0.8</span>:
+             <span class="k">return</span> <span class="s">"SHED_LOAD_AC_UNIT_4"</span>
+             
+        <span class="k">return</span> <span class="s">"MONITOR"</span>
 </div>
                     </div>
                 </div>
@@ -113,5 +119,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
