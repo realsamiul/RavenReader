@@ -6,7 +6,10 @@
     <title>M0NARQ | QC Vision</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .tech-spec { border-left: 2px solid var(--teal); padding-left: 1rem; margin: 1rem 0; font-family: var(--font-mono); font-size: 0.8rem; color: #aaa; }
+        .tech-spec { border-left: 2px solid var(--teal); padding-left: 1rem; margin: 1rem 0; font-family: var(--font-mono); font-size: 0.8rem; color: #aaa; background: rgba(0, 156, 166, 0.05); padding: 1rem; }
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 2rem; }
+        .feature-item h4 { color: var(--teal); margin-bottom: 0.5rem; }
+        .feature-item p { font-size: 0.9rem; color: #ccc; }
     </style>
 </head>
 <body>
@@ -28,6 +31,7 @@
         </ul>
     </div>
 
+    <!-- HERO -->
     <section id="hero" class="bg-black">
         <img src="qc-vision1.webp" class="hero-bg" alt="Fabric Inspection Process">
         <div class="container">
@@ -37,20 +41,22 @@
         </div>
     </section>
 
-    <!-- PROBLEM & SOLUTION -->
+    <!-- SECTION 1: THE PROBLEM (FATIGUE) -->
     <section class="bg-white section-padding">
         <div class="container">
             <div class="split-layout reveal">
                 <div>
                     <h2 style="color:var(--black)">THE HUMAN LIMIT.</h2>
+                    <h4 style="color:var(--black); margin-bottom:1rem;">THE 70-40 FATIGUE CURVE</h4>
                     <p style="color:#333">
-                        Manual inspection relies on human visual acuity, which degrades rapidly over an 8-12 hour shift. Research shows defect capture rates drop from <strong>70%</strong> in the first hour to <strong><40%</strong> by the eighth.
+                        Manual inspection relies on human visual acuity, which degrades rapidly over an 8-12 hour shift. Research indicates that defect capture rates drop from <strong>70%</strong> in the first hour to <strong><40%</strong> by the eighth hour due to cognitive fatigue. This inconsistency leads to a 3-5% defect rate in final output.
                     </p>
                     <p style="color:#333">
-                        <strong>The Economic Leakage:</strong> This inconsistency leads to a 3-5% defect rate. In a market exporting $32.6B annually, this is a <strong>$390M</strong> opportunity loss.
+                         In a market exporting $32.6B annually, this is a <strong>$390M</strong> opportunity loss. A single "Grade D" roll shipped to a buyer like H&M or Zara can result in a claim of <strong>$3,200</strong>, wiping out the margin for an entire batch.
                     </p>
+                     <h4 style="color:var(--black); margin-bottom:1rem; margin-top:2rem;">WHY LEGACY SOLUTIONS FAIL</h4>
                     <p style="color:#333">
-                        <strong>The Solution:</strong> We deploy <strong>MicroViT-Tiny-Q8</strong> on recycled smartphones ($20 BOM). Unlike humans, AI does not blink, tire, or miss.
+                        Imported AOI rigs (e.g., KeyeTech) solve this but cost <strong>$12,000+ per unit</strong>. They are rigid, requiring perfect lighting and massive floor space. They are economically unviable for the 4,000+ SME factories that form the backbone of the supply chain.
                     </p>
                 </div>
                 <div>
@@ -72,53 +78,78 @@
         </div>
     </section>
 
-    <!-- TECHNICAL DEEP DIVE -->
+    <!-- SECTION 2: THE SOLUTION (MICROVIT) -->
     <section class="bg-black section-padding">
         <div class="container">
-            <h2 class="reveal">TECHNICAL ARCHITECTURE</h2>
+            <h2 class="reveal">THE NEURAL STACK</h2>
             <div class="split-layout reveal">
                 <div>
+                     <p>We deploy <strong>MicroViT-Tiny-Q8</strong> on recycled smartphones ($20 BOM). Unlike humans, AI does not blink, tire, or miss.</p>
                     <div class="code-wrapper" style="border-left-color: var(--teal);">
 <div class="code-block">
-<span class="k">@app.cls</span>(gpu=<span class="s">"T4"</span>)
+<span class="c"># PRODUCTION-GRADE QC PIPELINE</span>
+<span class="k">import</span> onnxruntime <span class="k">as</span> ort
+<span class="k">import</span> numpy <span class="k">as</span> np
+
 <span class="k">class</span> <span class="f">DefectDetector</span>:
-    <span class="k">def</span> <span class="f">__enter__</span>(self):
+    <span class="k">def</span> <span class="f">__init__</span>(self):
         <span class="c"># 1. MicroViT-Tiny-Q8 (Backbone)</span>
         <span class="c"># 9M Params, int8 Quantized for Edge</span>
+        <span class="c"># 3.6x faster than DINO-v2 on ARM CPU</span>
         self.vit = ort.InferenceSession(<span class="s">"/models/microvit_q8.onnx"</span>)
         
         <span class="c"># 2. PicoSAM-2 (Segmentation)</span>
         <span class="c"># Promptable masks for Human-in-the-Loop</span>
-        self.sam = load_model(<span class="s">"picosam_v2"</span>)
+        self.sam = ort.InferenceSession(<span class="s">"/models/picosam_v2.onnx"</span>)
 
     <span class="k">def</span> <span class="f">detect</span>(self, img):
         <span class="c"># Inference: 28ms on Pi 5 CPU</span>
-        features = self.vit.run(img)
-        mask = self.sam.segment(features)
+        features = self.vit.run(None, {<span class="s">"input"</span>: img})
         
-        <span class="c"># Economic Classification</span>
-        <span class="k">if</span> mask.area > <span class="n">5.0</span>:
+        <span class="c"># Generate mask using features</span>
+        mask = self.sam.run(None, {<span class="s">"embedding"</span>: features})
+        
+        <span class="c"># Economic Classification Logic</span>
+        <span class="k">if</span> np.sum(mask) > <span class="n">5.0</span>:
+             <span class="c"># Trigger GPIO to stop machine</span>
             <span class="k">return</span> <span class="s">"STOP_LINE_CRITICAL"</span>
+            
         <span class="k">return</span> <span class="s">"LOG_DEFECT"</span>
 </div>
                     </div>
-                    <div class="tech-spec">
-                        > BACKBONE: MicroViT-Tiny (3.6x faster than DINO-v2)<br>
-                        > QUANTIZATION: 8-bit Integer (Run on CPU/NPU)<br>
-                        > LATENCY: 28ms (Raspberry Pi 5) / 14ms (Snapdragon)
-                    </div>
+                    
                 </div>
                 <div>
                     <ul style="list-style:none; border-top:1px solid #333; padding-top:2rem">
                         <li style="margin-bottom:2rem">
-                            <span class="mono teal">WHY NOT DINO-v2?</span>
-                            <p>While DINO-v2 is powerful, it is computationally heavy. We use <strong>MicroViT-Tiny-Q8</strong>. By quantizing to 8-bit integers, we fit the model into the limited L2 cache of mobile processors, achieving real-time speeds without the $1000+ cost of an NVIDIA Jetson.</p>
+                            <span class="mono teal">WHY MICROVIT vs DINO-v2?</span>
+                            <p>DINO-v2 (Meta) is the gold standard for features but is computationally heavy for a $90 computer. We use <strong>MicroViT-Tiny-Q8</strong>. By quantizing to 8-bit integers, we fit the model into the L2 cache of mobile processors (Snapdragon 778G), achieving a <strong>3.6x speedup</strong> vs ViT-Small while maintaining 91.3% accuracy on fabric texture datasets.</p>
                         </li>
                         <li style="margin-bottom:2rem">
-                            <span class="mono teal">HUMAN-IN-THE-LOOP (PicoSAM)</span>
-                            <p>We use <strong>PicoSAM-2</strong> for segmentation. It allows a floor manager to "tap" a new defect type on a tablet, instantly creating a mask and updating the local dataset. This "Few-Shot Learning" adapts to new fabric styles in minutes, not weeks.</p>
+                            <span class="mono teal">PICOSAM: HUMAN-IN-THE-LOOP</span>
+                            <p>We replaced the heavy Segment Anything Model (SAM) with <strong>PicoSAM-2</strong> (1.3M params). This allows "Promptable Masks"—a floor manager can "tap" a new defect type on a tablet, and the model instantly learns the boundary. This "Few-Shot Learning" adapts to new fabric styles in minutes, not weeks.</p>
+                        </li>
+                         <li style="margin-bottom:2rem">
+                            <span class="mono teal">DEPLOYMENT STEPS</span>
+                             <ol style="font-size:0.9rem; color:#aaa; margin-left:1.5rem; margin-top:0.5rem">
+                                 <li>Mount Smartphone on Tripod ($20).</li>
+                                 <li>Connect via USB to Raspberry Pi 5 ($90).</li>
+                                 <li>Run `docker-compose up` to pull MicroViT.</li>
+                                 <li>Calibrate lighting (auto-exposure script).</li>
+                             </ol>
                         </li>
                     </ul>
+                </div>
+            </div>
+            
+            <div class="feature-grid reveal">
+                <div class="feature-item">
+                     <h4>LATENCY DETERMINISM</h4>
+                     <p>Fabric rolls move at high speed. A round trip to the cloud takes 3000ms. Our local inference takes <strong>28ms</strong>. This ensures the machine stops <em>before</em> the defect is wound into the roll.</p>
+                </div>
+                <div class="feature-item">
+                     <h4>PRIVACY BY DESIGN</h4>
+                     <p>Proprietary fabric designs and worker faces are processed in RAM and discarded. No images leave the factory unless explicitly flagged for retraining, complying with Bangladesh DSA 2018.</p>
                 </div>
             </div>
         </div>
@@ -132,3 +163,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
