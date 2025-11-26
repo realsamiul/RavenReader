@@ -6,7 +6,6 @@
     <title>M0NARQ | Strategic Framework</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Embedded styles for new complex components */
         .framework-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
         .framework-card { border: 1px solid rgba(255,255,255,0.1); padding: 2rem; background: rgba(255,255,255,0.02); }
         .bg-white .framework-card { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.02); }
@@ -24,7 +23,6 @@
 <body>
     <div class="preloader"><p class="mono">INITIALIZING STRATEGIC FRAMEWORK 2026...</p></div>
 
-    <!-- NAV -->
     <button class="nav-island" onclick="toggleMenu()">
         <div class="nav-icon"></div><span class="nav-label">MENU</span>
     </button>
@@ -41,7 +39,6 @@
         </ul>
     </div>
 
-    <!-- HERO -->
     <section id="hero" class="bg-black">
         <img src="index1.webp" class="hero-bg" alt="Factory Floor Background">
         <div class="container">
@@ -58,16 +55,25 @@
     <section class="bg-white section-padding">
         <div class="container">
             <span class="mono" style="color:var(--black)">01. THE MACRO CONTEXT</span>
-            <h2 style="color:var(--black); margin-top:1rem; max-width:800px;">THE END OF LABOR ARBITRAGE.</h2>
+            <h2 style="color:var(--black); margin-top:1rem; max-width:800px;">THE TRIPLE THREAT.</h2>
             
             <div class="split-layout reveal">
                 <div>
+                    <h3 style="color:var(--black); margin-bottom:1rem;">1. THE TARIFF TRAP</h3>
                     <p style="color:#333">
-                        The comparative advantage of Bangladeshi labor is eroding. With US duties stabilizing at <strong>20%</strong> (down from a threatened 37%), Bangladesh faces stiff competition from "Near-Shoring" hubs like Mexico and Turkey, which offer speed-to-market that offsets their higher wages.
+                        The era of labor arbitrage is over. With US duties stabilizing at <strong>20%</strong> (down from a threatened 37%), Bangladesh faces stiff competition from "Near-Shoring" hubs like Mexico and Turkey. These competitors benefit from faster logistics, eroding the price advantage of Bangladeshi garments. To survive, factories must find margin elsewhere.
                     </p>
+                    
+                    <h3 style="color:var(--black); margin-bottom:1rem; margin-top:2rem;">2. THE ENERGY CRISIS</h3>
                     <p style="color:#333">
-                        Simultaneously, the <strong>EU Carbon Border Adjustment Mechanism (CBAM)</strong> phases in by January 2026. This is a non-tariff barrier that requires auditable energy traces for every garment. Factories that cannot digitally prove their efficiency will face tariff penalties or exclusion.
+                         With chronic LNG shortages, factories are forced to run captive diesel generators. The math is brutal: Diesel costs <strong>$0.32/kWh</strong>, nearly triple the grid rate of <strong>$0.12/kWh</strong>. A factory running a dyeing line on diesel for 4 hours a day bleeds margin that no volume of orders can recover.
                     </p>
+
+                     <h3 style="color:var(--black); margin-bottom:1rem; margin-top:2rem;">3. THE GREEN WALL (CBAM)</h3>
+                    <p style="color:#333">
+                        The <strong>EU Carbon Border Adjustment Mechanism (CBAM)</strong> phases in by January 2026. This is a non-tariff barrier that requires auditable energy traces for every garment. Manual logbooks will no longer be accepted. Factories that cannot digitally prove their efficiency will face tariff penalties or market exclusion.
+                    </p>
+                    
                     <div class="quote-box" style="border-color:var(--black); color:var(--black)">
                         "A 1% improvement in quality or uptime is no longer a marginal gain; in a $32.6B export market, it is a $326M defense mechanism."
                     </div>
@@ -101,7 +107,7 @@
             </div>
 
             <div class="reveal">
-                <p>The market currently offers two extremes: prohibitively expensive hardware from China/Germany (KeyeTech, Kevision) or basic ERP software (Inovace, Coats) that lacks physical sensing. <strong>Industrial-AI.One</strong> occupies the "Retrofit" gap.</p>
+                <p>The market currently offers two extremes: prohibitively expensive hardware from China/Germany (KeyeTech, Kevision) or basic ERP software (Inovace, Coats) that lacks physical sensing. <strong>Industrial-AI.One</strong> occupies the "Retrofit" gap—deploying intelligence on existing machinery.</p>
                 
                 <div style="overflow-x:auto">
                     <table class="comp-table">
@@ -138,6 +144,12 @@
                                 <td><span class="check">✔</span> <strong><100ms Stop</strong><br>High speed, high cost</td>
                                 <td><span class="cross">✘</span> <strong>Post-Mortem</strong><br>Analysis after shift</td>
                             </tr>
+                             <tr>
+                                <td><strong>Compliance</strong></td>
+                                <td style="color:var(--white)"><span class="check">✔</span> <strong>Automated DPP</strong><br>Parquet logs for EU</td>
+                                <td><span class="check">✔</span> <strong>Proprietary</strong><br>Vendor locked formats</td>
+                                <td><span class="cross">✘</span> <strong>Analog/Manual</strong><br>Not audit-ready</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -152,23 +164,23 @@
                 <div>
                     <h2 style="color:var(--black)">BEYOND RMG.</h2>
                     <p style="color:#333">
-                        While RMG is the economic anchor, this architecture is sector-agnostic. We address the broader "Smart Bangladesh 2041" industrial mandate.
+                        While RMG is the economic anchor, this architecture is sector-agnostic. We address the broader "Smart Bangladesh 2041" industrial mandate by applying our core technologies (Vision, Time-Series, Vibration) to other key sectors.
                     </p>
                     <div class="framework-grid">
                         <div class="framework-card" style="background:rgba(0,0,0,0.03); border-color:#ddd">
                             <span class="card-number">SECTOR 01</span>
                             <h4 style="color:var(--black)">LIGHT ENGINEERING</h4>
-                            <p style="font-size:0.9rem; color:#555"><strong>Hubs: Dholaikhal, Bogra</strong><br>Lathes and CNC machines suffer from tool wear. <em>FailPredict</em> prevents spindle damage and improves tolerance precision.</p>
+                            <p style="font-size:0.9rem; color:#555"><strong>Hubs: Dholaikhal, Bogra</strong><br>Lathes and CNC machines suffer from tool wear. <em>FailPredict</em> prevents spindle damage and improves tolerance precision, reducing scrap in automotive spare parts production.</p>
                         </div>
                         <div class="framework-card" style="background:rgba(0,0,0,0.03); border-color:#ddd">
                             <span class="card-number">SECTOR 02</span>
                             <h4 style="color:var(--black)">PLASTICS & POLYMER</h4>
-                            <p style="font-size:0.9rem; color:#555"><strong>Hubs: Lalbagh, Tongi</strong><br>Injection molding is energy-intensive. <em>PowerGuard</em> is critical for peak-shaving to manage high-load electrical costs.</p>
+                            <p style="font-size:0.9rem; color:#555"><strong>Hubs: Lalbagh, Tongi</strong><br>Injection molding is energy-intensive. <em>PowerGuard</em> is critical for peak-shaving to manage high-load electrical costs during the heating cycles of extruders.</p>
                         </div>
                          <div class="framework-card" style="background:rgba(0,0,0,0.03); border-color:#ddd">
                             <span class="card-number">SECTOR 03</span>
                             <h4 style="color:var(--black)">AGRO-PROCESSING</h4>
-                            <p style="font-size:0.9rem; color:#555"><strong>Hubs: Pran-RFL, City Group</strong><br>Cold chain compressor monitoring. Predicting failure in refrigeration units to prevent spoilage of perishable goods.</p>
+                            <p style="font-size:0.9rem; color:#555"><strong>Hubs: Pran-RFL, City Group</strong><br>Cold chain integrity. <em>FailPredict</em> monitors compressor health in refrigeration units to prevent failure and spoilage of perishable goods.</p>
                         </div>
                     </div>
                 </div>
