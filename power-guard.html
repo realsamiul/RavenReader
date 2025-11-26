@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M0NARQ | PowerGuard</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+         .compliance-box { background: #111; padding: 2rem; border: 1px solid var(--accent); margin-top: 2rem; }
+         .compliance-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+         .compliance-icon { width: 30px; height: 30px; background: var(--accent); border-radius: 50%; }
+         .tech-table { width:100%; font-size:0.8rem; font-family:var(--font-mono); color:#aaa; margin-top:1rem; border-collapse:collapse; }
+         .tech-table td { padding: 0.5rem; border-bottom: 1px solid #222; }
+    </style>
 </head>
 <body>
     <div class="preloader"><p class="mono">CONNECTING TO GRID...</p></div>
@@ -24,6 +31,7 @@
         </ul>
     </div>
 
+    <!-- HERO -->
     <section id="hero" class="bg-black">
         <img src="power-guard1.webp" class="hero-bg" alt="Energy grid visualization">
         <div class="container">
@@ -33,17 +41,17 @@
         </div>
     </section>
 
-    <!-- THE CRISIS -->
+    <!-- SECTION 1: THE PROBLEM -->
     <section class="bg-white section-padding">
         <div class="container">
             <div class="split-layout reveal">
                 <div>
                     <h2 style="color:var(--black)">THE ARBITRAGE CRISIS.</h2>
                     <p style="color:#333">
-                        Factories in Gazipur often operate at <30% capacity due to LNG shortages. The alternative—captive diesel generation—costs <strong>$0.32/kWh</strong>, nearly triple the grid rate of <strong>$0.12/kWh</strong>.
+                        Factories in Gazipur often operate at <30% capacity due to chronic LNG shortages. The alternative—captive diesel generation—costs <strong>$0.32/kWh</strong>, nearly triple the grid rate of <strong>$0.12/kWh</strong>. Running a dyeing line on diesel destroys profitability within hours.
                     </p>
-                    <p style="color:#333">
-                        <strong>Peak Shaving Strategy:</strong> Using the <strong>PZEM-004T</strong> split-core sensor ($9), we monitor power quality at 1Hz. The system predicts load spikes <strong>180 seconds</strong> in advance, allowing for automated "load shedding" of non-critical systems (ACs, exhaust) to prevent tripping generators.
+                     <p style="color:#333">
+                        Additionally, unmonitored "phantom loads" (machines left idle, inefficient motors) contribute to a 12-15% energy overspend. Without granular data, factory owners cannot identify where the waste is occurring.
                     </p>
                     <div class="stat-grid">
                         <div class="stat-item">
@@ -60,54 +68,87 @@
                 </div>
                 <div>
                     <img src="power-guard2.webp" class="content-image" alt="Graph showing energy spike prediction">
+                     <p style="font-size:0.9rem; color:#666; margin-top:1rem;">
+                        <strong>Current Solutions Shortfall:</strong> Standard smart meters only provide aggregate data (total kWh). They cannot predict spikes or identify specific failing components via power signatures. They are "post-mortem" tools.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ANALYTICS PIPELINE -->
+    <!-- SECTION 2: THE SOLUTION -->
     <section class="bg-black section-padding">
         <div class="container">
             <h2 class="reveal">ANALYTICS PIPELINE</h2>
             <div class="split-layout reveal">
                 <div>
+                    <p>We use the <strong>PZEM-004T</strong> split-core sensor ($9) to monitor power quality at 1Hz. The data feeds into a TS2Vec model running on an ESP32 microcontroller.</p>
                     <ul style="list-style:none; border-top:1px solid #333; padding-top:2rem">
                         <li style="margin-bottom:2rem">
-                            <span class="mono accent">SOLVING CONCEPT DRIFT</span>
-                            <p><strong>TS2Vec + MOMEMTO.</strong> Traditional forecasting fails as machines wear out and patterns change ("Concept Drift"). We use TS2Vec with a <strong>Memory Gate (MOMEMTO)</strong> to stabilize learning, ensuring the model doesn't over-generalize or "forget" the baseline behavior over weeks of operation.</p>
+                            <span class="mono accent">SOLVING CONCEPT DRIFT (MOMEMTO)</span>
+                            <p>Traditional forecasting (ARIMA) fails in factories because machine behavior changes as parts wear out ("Concept Drift"). We use TS2Vec with a <strong>Memory Gate (MOMEMTO)</strong> to stabilize learning. This acts as a long-term memory, ensuring the model doesn't over-generalize or "forget" the baseline behavior over weeks of operation.</p>
                         </li>
                         <li style="margin-bottom:2rem">
-                            <span class="mono accent">CHANGE POINT DETECTION</span>
-                            <p><strong>Bayesian CPD.</strong> We use Bayesian algorithms to identify structural shifts in consumption—distinguishing between a normal cycle change and a motor seizing up.</p>
-                        </li>
-                        <li style="margin-bottom:2rem">
-                            <span class="mono accent">COMPLIANCE ENGINE</span>
-                            <p><strong>EU Digital Product Passport.</strong> Energy logs are cryptographically signed and saved in Parquet format. This allows you to generate a "Green Certificate" per batch, satisfying strict EU CBAM audits.</p>
+                            <span class="mono accent">BAYESIAN CPD</span>
+                            <p><strong>Change Point Detection.</strong> We use Bayesian algorithms (Ruptures library) to identify structural shifts in consumption—distinguishing between a normal cycle change and a motor seizing up (anomaly).</p>
                         </li>
                     </ul>
+                    
+                    <div class="compliance-box">
+                        <div class="compliance-header">
+                            <div class="compliance-icon"></div>
+                            <h4 style="margin:0">EU COMPLIANCE ENGINE</h4>
+                        </div>
+                        <p style="font-size:0.85rem; color:#aaa; margin-bottom:0">
+                            <strong>Digital Product Passport (DPP):</strong> By 2026, every garment entering the EU must have a digital energy footprint. PowerGuard automatically generates cryptographically signed <strong>Parquet files</strong> per batch, creating a "Green Certificate" that satisfies CBAM audits.
+                        </p>
+                    </div>
                 </div>
                 <div>
                     <div class="code-wrapper" style="border-left-color: var(--accent);">
 <div class="code-block">
+<span class="c"># ENERGY ANALYTICS & PEAK SHAVING</span>
+<span class="k">from</span> ts2vec <span class="k">import</span> TS2Vec
+<span class="k">import</span> ruptures <span class="k">as</span> rpt
+
 <span class="k">class</span> <span class="f">PowerMonitor</span>:
     <span class="k">def</span> <span class="f">analyze_stream</span>(self, readings):
         <span class="c"># 1. Vectorize Data Stream (TS2Vec)</span>
         <span class="c"># Handles concept drift via Memory Gate</span>
         vec = self.ts2vec.encode(readings)
         
-        <span class="c"># 2. Tariff Logic (Bangladesh Context)</span>
+        <span class="c"># 2. Bayesian Change Point Detection</span>
+        <span class="c"># Identify structural shifts (start/stop/fault)</span>
+        algo = rpt.Pelt(model=<span class="s">"rbf"</span>).fit(vec)
+        breakpoints = algo.predict(pen=<span class="n">3</span>)
+        
+        <span class="c"># 3. Tariff Logic (Bangladesh Context)</span>
         <span class="c"># Peak: 17:00 - 23:00 ($0.12/kWh)</span>
         is_peak = <span class="n">17</span> <= datetime.now().hour <= <span class="n">23</span>
         
-        <span class="c"># 3. Peak Shaving Logic</span>
+        <span class="c"># 4. Peak Shaving Logic</span>
+        <span class="c"># If spike predicted during peak hours, shed load</span>
         <span class="k">if</span> is_peak <span class="k">and</span> prediction.spike_prob > <span class="n">0.8</span>:
              <span class="k">return</span> <span class="s">"SHED_LOAD_AC_UNIT_4"</span>
              
         <span class="k">return</span> <span class="s">"MONITOR"</span>
 </div>
                     </div>
+                    
+                    <table class="tech-table">
+                        <tr><td>SENSOR</td><td>PZEM-004T v3 ($9)</td></tr>
+                        <tr><td>CONTROLLER</td><td>ESP32 WROOM ($4)</td></tr>
+                        <tr><td>SAMPLING</td><td>1Hz (Voltage, Current, PF)</td></tr>
+                        <tr><td>PROTOCOL</td><td>MQTT over TLS 1.3</td></tr>
+                    </table>
                 </div>
             </div>
+            
+             <h3 style="margin-top:4rem; color:var(--white)">WIDER APPLICABILITY</h3>
+             <p style="max-width:800px; color:#999;">
+                 <strong>Plastics & Polymer (Lalbagh):</strong> Injection molding machines have massive heating cycles. PowerGuard manages these peaks to keep total demand charges low.<br><br>
+                 <strong>Cold Storage:</strong> Monitoring compressor duty cycles to detect refrigerant leaks (which manifest as extended run-times) before temperature excursions occur.
+             </p>
         </div>
     </section>
     
@@ -119,3 +160,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
