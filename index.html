@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M0NARQ | Industrial-AI.One</title>
+    <title>M0NARQ | Strategic Framework</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Local overrides for data tables */
+        .comp-table { width: 100%; border-collapse: collapse; margin-top: 2rem; color: #ccc; font-family: var(--font-mono); font-size: 0.85rem; }
+        .comp-table th { text-align: left; border-bottom: 1px solid #333; padding: 1rem; color: var(--accent); }
+        .comp-table td { border-bottom: 1px solid #222; padding: 1rem; }
+        .comp-table tr:last-child td { border-bottom: none; }
+        .highlight-row { background: rgba(255, 107, 28, 0.05); }
+        .check { color: var(--blue); }
+        .cross { color: #f44; }
+    </style>
 </head>
 <body>
     <!-- PRELOADER -->
@@ -29,47 +39,46 @@
 
     <!-- HERO -->
     <section id="hero" class="bg-black">
-        <img src="index1.webp" class="hero-bg" alt="Factory Floor Blurred Background">
+        <img src="index1.webp" class="hero-bg" alt="Factory Floor Background">
         <div class="container">
             <p class="mono reveal">STRATEGIC FRAMEWORK 2025-26</p>
             <h1 class="reveal">MARGIN<br><span class="outline-text">DEFENSE.</span></h1>
             <p class="reveal">
                 A techno-economic response to US Tariff Volatility and EU CBAM Compliance. 
-                Retrofitting the Bangladesh RMG sector for the age of Neural Manufacturing.
+                Retrofitting Bangladesh's industrial base for the age of Neural Manufacturing.
             </p>
         </div>
     </section>
 
-    <!-- THESIS -->
+    <!-- MACRO CONTEXT -->
     <section class="bg-white section-padding">
         <div class="container">
             <span class="mono" style="color:var(--black)">01. THE MACRO CONTEXT</span>
             <div class="split-layout reveal">
                 <div>
-                    <h2 style="color:var(--black); margin-top:1rem;">LABOR ARBITRAGE IS OVER.</h2>
+                    <h2 style="color:var(--black); margin-top:1rem;">THE TARIFF TRAP.</h2>
                     <p style="color:#333">
-                        The era of relying solely on low wages is ending. With US duties stabilizing at <strong>20%</strong> (down from a threatened 37%), the comparative advantage of Bangladeshi labor has eroded against near-shoring competitors like Mexico, which benefit from faster logistics.
+                        The era of labor arbitrage is over. With US duties stabilizing at <strong>20%</strong>, the comparative advantage of Bangladeshi labor has eroded against near-shoring competitors like Mexico.
                     </p>
                     <p style="color:#333">
-                        Simultaneously, the <strong>EU Carbon Border Adjustment Mechanism (CBAM)</strong> phases in by January 2026. This requires auditable energy traces for every garment. Factories that cannot digitally prove their efficiency will face tariff penalties.
+                        <strong>The Green Wall (Jan 2026):</strong> The EU Carbon Border Adjustment Mechanism (CBAM) and Digital Product Passport (DPP) mandate auditable energy traces for every garment. Manual logbooks will no longer be accepted by EU auditors.
                     </p>
                     <p style="color:#333">
-                        <strong>The "Retrofit Innovation" Strategy:</strong> Traditional "Industry 4.0" requires replacing machinery with smart units ($12,000+ CAPEX). We utilize a <strong>"Brownfield"</strong> approach—deploying commodity edge compute nodes (like Raspberry Pis) to overlay intelligence onto existing, "dumb" infrastructure without stopping the line.
+                        <strong>The Energy Reality:</strong> With chronic LNG shortages, factories are forced to burn diesel at <strong>$0.32/kWh</strong>—nearly 3x the grid rate. Efficiency is no longer about "green" PR; it is about solvency.
                     </p>
                 </div>
                 <div>
-                    <!-- REMOVED FILTER INVERT HERE -->
                     <img src="index2.webp" class="content-image" alt="Data Visualization of Market Loss">
                     <div class="stat-grid">
                         <div class="stat-item">
                             <h3 style="color:var(--black)">$390M</h3>
                             <p class="mono" style="color:#555">ANNUAL DEFECT LOSS</p>
-                            <p style="font-size:0.8rem; color:#666; line-height:1.4">3-5% of total yardage is lost to defects, requiring costly rework or discounting.</p>
+                            <p style="font-size:0.8rem; color:#666; line-height:1.4">3-5% of total yardage lost to manual QC errors.</p>
                         </div>
                         <div class="stat-item">
                             <h3 style="color:var(--black)">$2.04B</h3>
-                            <p class="mono" style="color:#555">MECHANICAL DOWNTIME</p>
-                            <p style="font-size:0.8rem; color:#666; line-height:1.4">Unplanned outages in dyeing and knitting lines cost the sector billions (ILO, 2023).</p>
+                            <p class="mono" style="color:#555">DOWNTIME COST</p>
+                            <p style="font-size:0.8rem; color:#666; line-height:1.4">Unplanned mechanical failure across RMG & Light Engineering.</p>
                         </div>
                     </div>
                 </div>
@@ -77,23 +86,97 @@
         </div>
     </section>
 
-    <!-- PLATFORM -->
+    <!-- COMPETITIVE LANDSCAPE -->
     <section class="bg-black section-padding">
         <div class="container">
             <div class="module-header reveal">
-                <span class="module-tag">02. THE PLATFORM</span>
-                <h2>EDGE-NATIVE INTELLIGENCE</h2>
-                <p>Three drop-in AI modules. Zero cloud dependency. <span class="accent">$150 Hardware BOM. 47-day ROI.</span></p>
+                <span class="module-tag">02. MARKET LANDSCAPE</span>
+                <h2>THE BROWNFIELD ADVANTAGE</h2>
+                <p>Why "Retrofit AI" outperforms legacy automation and local ERP solutions.</p>
             </div>
 
+            <div class="reveal">
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>FEATURE</th>
+                            <th style="color:var(--white)">INDUSTRIAL-AI.ONE</th>
+                            <th>IMPORTED AUTOMATION</th>
+                            <th>LOCAL ERP/MES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td>CAPEX Per Line</td>
+                            <td style="color:var(--white)"><strong>~$150 (Retrofit)</strong></td>
+                            <td>$12,000+ (Replacement)</td>
+                            <td>$500+ (Software Only)</td>
+                        </tr>
+                        <tr>
+                            <td>Installation Time</td>
+                            <td style="color:var(--white)"><strong>< 1 Hour</strong></td>
+                            <td>3-6 Months</td>
+                            <td>2-4 Weeks</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>Data Privacy</td>
+                            <td style="color:var(--white)"><strong>Local / Edge-Native</strong></td>
+                            <td>Cloud / Proprietary</td>
+                            <td>Cloud / Centralized</td>
+                        </tr>
+                        <tr>
+                            <td>EU Compliance</td>
+                            <td style="color:var(--white)"><span class="check">✔</span> <strong>Automated (DPP)</strong></td>
+                            <td><span class="check">✔</span> Proprietary Format</td>
+                            <td><span class="cross">✘</span> Manual Entry</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>Hardware</td>
+                            <td style="color:var(--white)"><strong>Commodity (Phone/Pi)</strong></td>
+                            <td>Custom Industrial PC</td>
+                            <td>N/A (PC/Tablet)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- INDUSTRIAL SOVEREIGNTY -->
+    <section class="bg-white section-padding">
+        <div class="container">
+            <div class="split-layout reveal">
+                <div>
+                    <h2 style="color:var(--black)">BEYOND RMG.</h2>
+                    <p style="color:#333">
+                        While RMG is the anchor, our architecture addresses the broader Bangladeshi industrial base.
+                    </p>
+                    <ul style="list-style:none; padding-left:0; margin-top:1.5rem">
+                        <li style="margin-bottom:1rem; color:#333">
+                            <strong class="mono" style="color:var(--accent)">LIGHT ENGINEERING (Bogra/Dholaikhal)</strong><br>
+                            CNC machines and Lathes suffer from tool wear. Our vibration sensors predict spindle failure before expensive parts are ruined.
+                        </li>
+                        <li style="margin-bottom:1rem; color:#333">
+                            <strong class="mono" style="color:var(--accent)">PLASTICS & POLYMER</strong><br>
+                            Injection molding is energy-intensive. <em>PowerGuard</em> enables peak-shaving to manage high-load electrical costs in real-time.
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <img src="work1.webp" class="content-image" alt="Worker using the app" style="filter:invert(0)">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLATFORM OVERVIEW -->
+    <section class="bg-black section-padding">
+        <div class="container">
             <div class="split-layout reveal">
                 <div>
                     <h3>COMPUTE SOVEREIGNTY</h3>
                     <p>
-                        Our architecture rejects the centralized cloud model. We utilize the <strong>Raspberry Pi 5</strong> (quad-core 2.4GHz) and recycled <strong>Android Smartphones</strong> (Snapdragon 778G) as local compute nodes.
-                    </p>
-                    <p>
-                        <strong>Why Edge?</strong> Streaming HD video to the cloud incurs latency (>3000ms) that is too slow for high-speed fabric inspection. By running <strong>8-bit quantized models</strong> locally, we achieve <200ms latency. This also guarantees <strong>Data Sovereignty</strong>—proprietary patterns and worker faces are processed in RAM and never transmit to third-party servers, ensuring inherent GDPR/DSA compliance.
+                        We reject the centralized cloud. By running <strong>8-bit quantized models</strong> on local Raspberry Pi 5 and Android nodes, we achieve <200ms latency without uploading proprietary designs to foreign servers.
                     </p>
                     <ul class="mono" style="margin-top:2rem; line-height:2;">
                         <li><a href="qc-vision.html" style="color:var(--white); border-bottom:1px solid #333; padding-bottom:5px;">01. QC VISION (Visual Intelligence) &rarr;</a></li>
@@ -102,7 +185,16 @@
                     </ul>
                 </div>
                 <div>
-                    <img src="work1.webp" class="content-image" alt="Worker using the app">
+                    <div class="stat-grid" style="border-top:none; margin-top:0;">
+                         <div class="stat-item">
+                            <h3>47 Days</h3>
+                            <p class="mono">PAYBACK PERIOD</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>9.2x</h3>
+                            <p class="mono">YEAR 1 ROI</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -118,5 +210,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
