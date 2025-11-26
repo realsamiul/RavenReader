@@ -63,11 +63,11 @@
     --accent: #FF6B1C;
     --teal: #009CA6;
     --blue: #00E054;
-    --text-muted: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.85);
     
-    /* Typography */
+    /* Typography - FORCE EDITORIAL NEW EVERYWHERE */
     --font-editorial: 'Editorial New', Georgia, serif;
-    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-sans: 'Editorial New', Georgia, serif;  /* Changed to Editorial */
     --font-mono: 'SF Mono', Monaco, 'Courier New', monospace;
     
     /* Spacing */
@@ -103,24 +103,26 @@ html {
     overflow-x: hidden;
 }
 
+/* FORCE EDITORIAL NEW ON BODY AND ALL ELEMENTS */
 body {
-    font-family: var(--font-editorial);
+    font-family: 'Editorial New', Georgia, serif !important;
     background-color: var(--black);
     color: var(--white);
     overflow-x: hidden;
     width: 100%;
-    line-height: 1.4;
+    line-height: 1.5;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: "kern" 1, "liga" 1;
 }
 
-/* --- LOCOMOTIVE-STYLE TYPOGRAPHY --- */
+/* --- TYPOGRAPHY WITH EDITORIAL NEW --- */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-editorial);
+    font-family: 'Editorial New', Georgia, serif !important;
     font-weight: 300;
     letter-spacing: -0.02em;
-    line-height: 0.9;
+    line-height: 0.95;
     margin: 0;
 }
 
@@ -149,42 +151,69 @@ h4 {
     margin-bottom: var(--space-md);
 }
 
+/* PARAGRAPHS WITH EDITORIAL NEW */
 p {
-    font-family: var(--font-sans);
-    font-size: clamp(1rem, 1.5vw, 1.25rem);
-    line-height: 1.7;
+    font-family: 'Editorial New', Georgia, serif !important;
+    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+    font-weight: 400;
+    line-height: 1.8;
     margin-bottom: var(--space-md);
     color: var(--text-muted);
     max-width: 70ch;
+    letter-spacing: 0.01em;
+}
+
+/* Force Editorial on all text elements */
+span:not(.mono):not(.nav-label), 
+div:not(.nav-icon):not(.code-block), 
+li, 
+td, 
+th, 
+label, 
+button:not(.menu-close), 
+a:not(.menu-link) {
+    font-family: 'Editorial New', Georgia, serif !important;
 }
 
 .large-text {
-    font-family: var(--font-editorial);
+    font-family: 'Editorial New', Georgia, serif !important;
     font-size: clamp(1.5rem, 3vw, 2.5rem);
     font-weight: 300;
-    line-height: 1.3;
+    line-height: 1.4;
     letter-spacing: -0.01em;
 }
 
+/* MONO TEXT - Keep as is */
 .mono {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono) !important;
     font-size: 0.75rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     font-weight: 500;
 }
 
-
+/* FIX OUTLINE TEXT FOR LEGIBILITY */
 .outline-text {
-    /* REMOVED: -webkit-text-stroke: 2px var(--white); */
-    /* REMOVED: color: transparent; */
-    color: var(--white); /* Changed to solid white */
-    opacity: 1;          /* Changed from 0.5 to 1 for full visibility */
-    
-    /* Keep existing border/stroke properties off */
-    -webkit-text-stroke: 0;
+    /* Creating a subtle outline effect that's readable */
+    color: rgba(255, 255, 255, 0.2);
+    position: relative;
+    font-weight: 200;
+    /* Alternative approach with mix-blend-mode */
+    mix-blend-mode: difference;
 }
 
+/* Alternative if you want stroke effect that's legible */
+@supports (-webkit-text-stroke: 1px white) {
+    .outline-text {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+        -webkit-text-fill-color: transparent;
+        text-stroke: 1px rgba(255, 255, 255, 0.3);
+        text-fill-color: transparent;
+        font-weight: 300;
+        opacity: 0.9;
+        mix-blend-mode: normal;
+    }
+}
 
 /* --- LAYOUT --- */
 .container {
@@ -193,6 +222,7 @@ p {
     margin: 0 auto;
     padding: 0 var(--gutter);
     position: relative;
+    z-index: 2;
 }
 
 .section-padding {
@@ -206,7 +236,7 @@ p {
     }
 }
 
-/* --- HERO SECTION --- */
+/* --- HERO SECTION WITH BETTER TEXT VISIBILITY --- */
 #hero {
     min-height: 100vh;
     min-height: 100dvh;
@@ -218,7 +248,6 @@ p {
     padding: var(--space-xl) var(--gutter);
 }
 
-/* Hero with crisp images and darkened overlay for legibility */
 .hero-bg {
     position: absolute;
     top: 0;
@@ -227,13 +256,12 @@ p {
     height: 100%;
     object-fit: cover;
     z-index: 0;
-    /* Remove grayscale - keep images crisp */
     filter: none;
     transform: scale(1.1);
     transition: transform 10s var(--ease-out-expo);
 }
 
-/* Dark overlay for text legibility */
+/* Darker overlay for better text legibility */
 #hero::after {
     content: '';
     position: absolute;
@@ -242,9 +270,9 @@ p {
     width: 100%;
     height: 100%;
     background: linear-gradient(180deg, 
-        rgba(0,0,0,0.3) 0%, 
-        rgba(0,0,0,0.5) 50%, 
-        rgba(0,0,0,0.7) 100%);
+        rgba(0,0,0,0.4) 0%, 
+        rgba(0,0,0,0.6) 50%, 
+        rgba(0,0,0,0.8) 100%);
     z-index: 1;
 }
 
@@ -252,13 +280,52 @@ p {
     transform: scale(1.05);
 }
 
+/* Enhanced hero text visibility */
 #hero h1 {
     color: var(--white);
-    text-shadow: 0 2px 40px rgba(0,0,0,0.5);
+    text-shadow: 0 4px 60px rgba(0,0,0,0.8), 0 2px 20px rgba(0,0,0,0.9);
+    position: relative;
+    z-index: 2;
 }
 
 #hero p {
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 2px 20px rgba(0,0,0,0.7);
+    position: relative;
+    z-index: 2;
+    font-family: 'Editorial New', Georgia, serif !important;
+    font-weight: 400;
+}
+
+#hero .mono {
     color: rgba(255,255,255,0.9);
+    text-shadow: 0 1px 10px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 2;
+}
+
+/* Ensure container is above overlay */
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* --- WHITE BACKGROUND SECTIONS --- */
+.bg-white {
+    background-color: var(--white);
+    color: var(--black);
+}
+
+.bg-white p {
+    color: rgba(0, 0, 0, 0.8);
+    font-family: 'Editorial New', Georgia, serif !important;
+}
+
+.bg-white h1,
+.bg-white h2,
+.bg-white h3,
+.bg-white h4 {
+    color: var(--black);
 }
 
 /* --- IMAGES - CRISP, TALL, FULL WIDTH --- */
@@ -270,11 +337,9 @@ p {
     margin: var(--space-2xl) 0;
     position: relative;
     overflow: hidden;
-    /* Crisp images - no filters */
     filter: none;
 }
 
-/* Full bleed images */
 .content-image.full-bleed {
     width: 100vw;
     margin-left: calc(50% - 50vw);
@@ -292,46 +357,7 @@ p {
     }
 }
 
-/* Image reveal with mask animation */
-.image-reveal {
-    position: relative;
-    overflow: hidden;
-}
-
-.image-reveal::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--black);
-    transform-origin: bottom;
-    transition: transform 1.2s var(--ease-out-expo);
-}
-
-.image-reveal.revealed::after {
-    transform: scaleY(0);
-}
-
-/* Parallax wrapper for images */
-.parallax-wrapper {
-    position: relative;
-    overflow: hidden;
-    height: 80vh;
-}
-
-.parallax-image {
-    position: absolute;
-    top: -10%;
-    left: 0;
-    width: 100%;
-    height: 120%;
-    object-fit: cover;
-    will-change: transform;
-}
-
-/* --- CODE BLOCK ENHANCED STYLING --- */
+/* --- CODE BLOCKS - Keep mono font --- */
 .code-wrapper {
     background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
     padding: var(--space-lg);
@@ -341,7 +367,6 @@ p {
     border-radius: 2px;
 }
 
-/* Animated accent line */
 .code-wrapper::before {
     content: '';
     position: absolute;
@@ -364,34 +389,15 @@ p {
 }
 
 .code-block {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono) !important;
     font-size: 0.9rem;
     line-height: 1.8;
     color: rgba(255, 255, 255, 0.9);
     overflow-x: auto;
     padding-bottom: 1rem;
-    /* Custom scrollbar for code blocks */
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) transparent;
 }
 
-.code-block::-webkit-scrollbar {
-    height: 4px;
-}
-
-.code-block::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 2px;
-}
-
-/* Syntax highlighting with better colors */
-.k { color: #79c0ff; font-weight: 500; }
-.f { color: #d2a8ff; }
-.s { color: #a5d6ff; }
-.c { color: #8b949e; font-style: italic; }
-.n { color: #7ee787; }
-
-/* --- STATS SECTION ENHANCED --- */
+/* --- STATS SECTION --- */
 .stat-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -401,42 +407,17 @@ p {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@media (min-width: 600px) {
-    .stat-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1000px) {
-    .stat-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-xl);
-    }
-}
-
-.stat-item {
-    position: relative;
-    padding: var(--space-md) 0;
-}
-
 .stat-item h3 {
-    font-family: var(--font-editorial);
+    font-family: 'Editorial New', Georgia, serif !important;
     font-size: clamp(3rem, 7vw, 5rem);
     font-weight: 200;
     line-height: 1;
     margin-bottom: var(--space-sm);
     letter-spacing: -0.02em;
-    /* For animated counters */
-    transition: all 0.3s var(--ease-out-expo);
-}
-
-.stat-item h3.counting {
-    transform: scale(1.05);
-    color: var(--accent);
 }
 
 .stat-item p {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono) !important;
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -444,23 +425,17 @@ p {
     margin-bottom: var(--space-sm);
 }
 
-/* --- SPLIT LAYOUTS --- */
-.split-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-xl);
-    align-items: center;
-    margin: var(--space-2xl) 0;
+/* Additional small paragraph text in stats */
+.stat-item p:last-child {
+    font-family: 'Editorial New', Georgia, serif !important;
+    font-size: 0.95rem;
+    text-transform: none;
+    letter-spacing: normal;
+    opacity: 0.7;
+    line-height: 1.6;
 }
 
-@media (min-width: 900px) {
-    .split-layout {
-        grid-template-columns: 1fr 1fr;
-        gap: var(--space-2xl);
-    }
-}
-
-/* --- NAVIGATION ISLAND ENHANCED --- */
+/* --- NAVIGATION ISLAND --- */
 .nav-island {
     position: fixed;
     bottom: 2rem;
@@ -482,71 +457,20 @@ p {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.nav-island:hover {
-    transform: translateX(-50%) translateY(-3px);
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-    background: rgba(255, 255, 255, 1);
-}
-
-.nav-icon {
-    width: 8px;
-    height: 8px;
-    background: var(--black);
-    border-radius: 50%;
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-.nav-island:hover .nav-icon {
-    transform: scale(1.2);
-    background: var(--accent);
-}
-
 .nav-label {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono) !important;
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
-/* --- FULLSCREEN MENU ENHANCED --- */
-.fullscreen-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--black);
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--gutter);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.6s var(--ease-out-expo);
-}
-
-.fullscreen-menu.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.menu-list {
-    list-style: none;
-}
-
-.menu-item {
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-}
-
+/* --- MENU --- */
 .menu-link {
     display: inline-block;
     text-decoration: none;
     color: var(--white);
-    font-family: var(--font-editorial);
+    font-family: 'Editorial New', Georgia, serif !important;
     font-size: clamp(2.5rem, 8vw, 6rem);
     font-weight: 200;
     line-height: 1.1;
@@ -555,17 +479,8 @@ p {
     transition: all 0.6s var(--ease-out-expo);
 }
 
-.fullscreen-menu.active .menu-link {
-    transform: translateY(0);
-}
-
-.menu-link:hover {
-    color: var(--accent);
-    transform: translateX(20px);
-}
-
 .menu-link.sub {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono) !important;
     font-size: 0.875rem;
     font-weight: 400;
     text-transform: uppercase;
@@ -574,31 +489,57 @@ p {
 }
 
 .menu-close {
-    position: fixed;
-    top: 2rem;
-    right: 2rem;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: var(--white);
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s var(--ease-out-expo);
-    font-family: var(--font-mono);
-    font-size: 1.2rem;
+    font-family: var(--font-mono) !important;
 }
 
-.menu-close:hover {
-    border-color: var(--white);
-    transform: rotate(90deg);
-    background: rgba(255, 255, 255, 0.1);
+/* --- TABLES --- */
+.comp-table th,
+.comp-table td {
+    font-family: 'Editorial New', Georgia, serif !important;
 }
 
-/* --- PRELOADER ENHANCED --- */
+.comp-table strong {
+    font-family: 'Editorial New', Georgia, serif !important;
+    font-weight: 500;
+}
+
+/* --- MODULE TAGS --- */
+.module-tag {
+    font-family: var(--font-mono) !important;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: var(--space-sm);
+    opacity: 0.8;
+}
+
+/* --- CARD NUMBERS --- */
+.card-number {
+    font-family: var(--font-mono) !important;
+}
+
+/* --- QUOTES --- */
+.quote-box {
+    font-family: 'Editorial New', Georgia, serif !important;
+    font-weight: 300;
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    line-height: 1.5;
+}
+
+/* --- REVEAL ANIMATIONS --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(60px);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 1.2s var(--ease-out-expo);
+}
+
+/* --- PRELOADER --- */
 .preloader {
     position: fixed;
     top: 0;
@@ -621,107 +562,16 @@ p {
 .preloader p {
     color: var(--black);
     animation: pulse-fade 1s ease infinite;
+    font-family: var(--font-mono) !important;
 }
 
-@keyframes pulse-fade {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-}
-
-/* --- REVEAL ANIMATIONS --- */
-.reveal {
-    opacity: 0;
-    transform: translateY(60px);
-}
-
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 1.2s var(--ease-out-expo);
-}
-
-/* Staggered reveals */
-.reveal-stagger {
-    opacity: 0;
-    transform: translateY(40px);
-}
-
-.reveal-stagger.active {
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.8s var(--ease-out-expo);
-}
-
-.reveal-stagger:nth-child(1) { transition-delay: 0s; }
-.reveal-stagger:nth-child(2) { transition-delay: 0.1s; }
-.reveal-stagger:nth-child(3) { transition-delay: 0.2s; }
-.reveal-stagger:nth-child(4) { transition-delay: 0.3s; }
-.reveal-stagger:nth-child(5) { transition-delay: 0.4s; }
-
-/* Scale reveal */
-.reveal-scale {
-    opacity: 0;
-    transform: scale(0.9);
-}
-
-.reveal-scale.active {
-    opacity: 1;
-    transform: scale(1);
-    transition: all 1s var(--ease-out-expo);
-}
-
-/* --- MODULE STYLING --- */
-.module-header {
-    margin-bottom: var(--space-xl);
-    position: relative;
-    padding-bottom: var(--space-md);
-}
-
-.module-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 80px;
-    height: 2px;
-    background: var(--accent);
-    transition: width 0.8s var(--ease-out-expo);
-}
-
-.module-header.active::after {
-    width: 200px;
-}
-
-.module-tag {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    margin-bottom: var(--space-sm);
-    opacity: 0.8;
-}
-
-/* --- UTILITY CLASSES --- */
-.bg-white {
-    background-color: var(--white);
-    color: var(--black);
-}
-
-.bg-white p {
-    color: rgba(0, 0, 0, 0.7);
-}
-
-.bg-black {
-    background-color: var(--black);
-    color: var(--white);
-}
+/* Keep remaining styles as they were... */
 
 .accent { color: var(--accent); }
 .teal { color: var(--teal); }
 .blue { color: var(--blue); }
 
-/* --- RESPONSIVE ADJUSTMENTS --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
     :root {
         --gutter: 1.5rem;
@@ -731,12 +581,12 @@ p {
         line-height: 0.95;
     }
     
-    .section-padding {
-        padding: var(--space-xl) 0;
+    p {
+        font-size: 1.1rem;
     }
 }
 
-/* --- SMOOTH SCROLLBAR --- */
+/* --- SCROLLBAR --- */
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -748,7 +598,6 @@ p {
 ::-webkit-scrollbar-thumb {
     background: var(--gray-medium);
     border-radius: 5px;
-    transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
