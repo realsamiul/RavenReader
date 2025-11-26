@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M0NARQ | Industrial AI</title>
+    
+    <!-- Load GSAP & Lenis for High-End Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <style>
+        /* --- FONT DECLARATIONS --- */
+        @font-face { font-family: 'Editorial New'; src: url('EditorialNew-Ultralight.woff2') format('woff2'); font-weight: 200; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Editorial New'; src: url('EditorialNew-Light.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Editorial New'; src: url('EditorialNew-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Editorial New'; src: url('EditorialNew-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Editorial New'; src: url('EditorialNew-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+        @font-face { font-family: 'Editorial New'; src: url('EditorialNew-Heavy.woff2') format('woff2'); font-weight: 900; font-style: normal; font-display: swap; }
+
+        /* --- CORE VARIABLES --- */
+        :root {
+            --black: #050505;
+            --white: #ffffff;
+            --accent: #FF6B1C;
+            --teal: #009CA6;
+            --text-muted: rgba(255, 255, 255, 0.85);
+            --font-editorial: 'Editorial New', Georgia, serif;
+            --font-mono: 'SF Mono', Monaco, 'Courier New', monospace;
+            --gutter: 5vw;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* Custom cursor active */ }
+        
+        html.lenis { height: auto; } 
+        .lenis.lenis-smooth { scroll-behavior: auto; } 
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; } 
+        .lenis.lenis-stopped { overflow: hidden; } 
+        .lenis.lenis-scrolling iframe { pointer-events: none; } 
+
+        body {
+            font-family: 'Editorial New', Georgia, serif !important;
+            background-color: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            width: 100%;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor {
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+            background: var(--white); border-radius: 50%; pointer-events: none;
+            z-index: 9999; mix-blend-mode: difference;
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s;
+        }
+        .cursor.hovered { width: 50px; height: 50px; background: var(--accent); mix-blend-mode: normal; opacity: 0.8; }
+
+        /* --- TYPOGRAPHY (User's Strict Rules) --- */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Editorial New', Georgia, serif !important;
+            font-weight: 300; letter-spacing: -0.02em; line-height: 0.95; margin: 0;
+        }
+        h1 { font-size: clamp(4rem, 14vw, 11rem); font-weight: 200; margin-bottom: 4rem; }
+        h2 { font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 300; margin-bottom: 4rem; }
+        h3 { font-size: clamp(1.75rem, 5vw, 3rem); font-weight: 400; margin-bottom: 2rem; }
+        
+        p {
+            font-family: 'Editorial New', Georgia, serif !important;
+            font-size: clamp(1.15rem, 1.6vw, 1.4rem); font-weight: 400;
+            line-height: 1.6; margin-bottom: 2rem; color: var(--text-muted); max-width: 65ch;
+        }
+
+        /* Force Editorial on generic elements */
+        span:not(.mono), div:not(.code-block), li, td, th, a { font-family: 'Editorial New', Georgia, serif !important; }
+
+        .mono {
+            font-family: var(--font-mono) !important; font-size: 0.75rem;
+            letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500;
+        }
+
+        /* --- LAYOUT & HERO --- */
+        .container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 var(--gutter); position: relative; z-index: 2; }
+        .section-padding { padding: 10rem 0; position: relative; }
+
+        #hero {
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; padding: 0 var(--gutter);
+        }
+        
+        .hero-img-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; overflow: hidden;
+        }
+        
+        .hero-bg {
+            width: 100%; height: 120%; object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        #hero::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%); z-index: 1;
+        }
+
+        #hero h1 { 
+            color: #ffffff !important; text-shadow: 0 4px 40px rgba(0,0,0,0.5); 
+            position: relative; z-index: 2; overflow: hidden;
+        }
+        #hero p { 
+            color: #ffffff !important; opacity: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            position: relative; z-index: 2; font-weight: 400;
+        }
+
+        /* --- IMAGES & PARALLAX --- */
+        .content-image-wrapper {
+            width: 100%; height: 80vh; overflow: hidden; position: relative; margin: 4rem 0;
+        }
+        .content-image {
+            width: 100%; height: 120%; object-fit: cover; position: absolute; top: -10%;
+        }
+
+        /* --- THEMES --- */
+        .bg-white { background-color: var(--white); color: var(--black); }
+        .bg-white p { color: #1a1a1a; }
+        .bg-white h1, .bg-white h2, .bg-white h3 { color: #000; }
+        .bg-black { background-color: var(--black); color: var(--white); }
+
+        /* --- SPLIT LAYOUT --- */
+        .split-layout {
+            display: grid; grid-template-columns: 1fr; gap: 4rem; align-items: center;
+        }
+        @media (min-width: 900px) { 
+            .split-layout { grid-template-columns: 1.2fr 0.8fr; gap: 6rem; } 
+            .split-layout.reverse { grid-template-columns: 0.8fr 1.2fr; }
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-island {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            z-index: 1000; background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px); color: var(--black);
+            padding: 1rem 2.5rem; border-radius: 50px;
+            display: flex; align-items: center; gap: 1rem; cursor: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        .nav-island:hover { transform: translateX(-50%) scale(1.05); }
+        .nav-label { font-family: var(--font-mono) !important; font-weight: 600; font-size: 0.7rem; }
+        
+        .fullscreen-menu {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--black); z-index: 999;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .fullscreen-menu.active { opacity: 1; visibility: visible; pointer-events: all; }
+        .menu-link {
+            display: block; text-decoration: none; color: var(--white);
+            font-size: clamp(3rem, 8vw, 6rem); font-weight: 100;
+            margin-bottom: 1rem; transition: color 0.3s; cursor: none;
+            overflow: hidden;
+        }
+        .menu-link:hover { color: var(--accent); font-style: italic; }
+        .menu-close {
+            position: absolute; top: 2rem; right: 2rem;
+            background: none; border: 1px solid rgba(255,255,255,0.2);
+            color: white; width: 60px; height: 60px; border-radius: 50%;
+            cursor: none; font-family: var(--font-mono) !important;
+            display: grid; place-items: center; transition: 0.3s;
+        }
+        .menu-close:hover { background: white; color: black; }
+
+        /* --- UTILS --- */
+        .code-wrapper {
+            background: #111; padding: 2rem; border-left: 2px solid var(--accent);
+            font-family: var(--font-mono) !important; font-size: 0.85rem; color: #ccc;
+            margin: 2rem 0; overflow-x: auto;
+        }
+        .stat-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+            margin-top: 4rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 2rem;
+        }
+        .bg-black .stat-grid { border-color: rgba(255,255,255,0.2); }
+        .stat-item h3 { font-size: 4rem; margin-bottom: 0.5rem; color: var(--accent); }
+        
+        /* Animations */
+        .reveal-text { overflow: hidden; display: block; }
+        .reveal-text span { display: block; transform: translateY(100%); transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1); }
+        .is-inview .reveal-text span { transform: translateY(0); }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* Preloader */
+        .preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--white); z-index: 99999;
+            display: flex; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- PRELOADER -->
+    <div class="preloader">
+        <p class="mono" style="color:black">INITIALIZING NEURAL ENGINE...</p>
+    </div>
+
+    <!-- NAVIGATION -->
+    <button class="nav-island" onclick="toggleMenu()" data-cursor-hover>
+        <div style="width:8px;height:8px;background:black;border-radius:50%;"></div>
+        <span class="nav-label">MENU</span>
+    </button>
+
+    <div class="fullscreen-menu" id="fsMenu">
+        <button class="menu-close" onclick="toggleMenu()" data-cursor-hover>CLOSE</button>
+        <ul style="list-style:none; text-align:center;">
+            <li><a onclick="navigate('home')" class="menu-link" data-cursor-hover>M0NARQ</a></li>
+            <li><a onclick="navigate('qc')" class="menu-link" data-cursor-hover>01. QC Vision</a></li>
+            <li><a onclick="navigate('power')" class="menu-link" data-cursor-hover>02. PowerGuard</a></li>
+            <li><a onclick="navigate('fail')" class="menu-link" data-cursor-hover>03. FailPredict</a></li>
+        </ul>
+    </div>
+
+    <!-- ================= PAGE: HOME ================= -->
+    <div id="view-home" class="view-section active">
+        <section id="hero">
+            <div class="hero-img-container">
+                <img src="index1.webp" class="hero-bg" data-scroll data-scroll-speed="-0.5" alt="Factory Floor">
+            </div>
+            <div class="container">
+                <p class="mono reveal-text"><span>STRATEGIC RESPONSE • FY2025-26</span></p>
+                <h1 class="reveal-text"><span>MARGIN</span><br><span>DEFENSE.</span></h1>
+                <p class="reveal-text"><span>A techno-economic framework to counter Tariff Volatility, Energy Scarcity, and EU Compliance pressure.</span></p>
+            </div>
+        </section>
+
+        <section class="bg-white section-padding">
+            <div class="container">
+                <span class="mono" style="color:black">01. THE MACRO CONTEXT</span>
+                <h2 style="margin-top:1rem;">THE TRIPLE THREAT.</h2>
+                <div class="split-layout">
+                    <div>
+                        <h3 style="color:black">1. THE TARIFF TRAP</h3>
+                        <p>The era of labor arbitrage is over. With US duties stabilizing at <strong>20%</strong>, Bangladesh faces stiff competition from "Near-Shoring" hubs like Mexico and Turkey.</p>
+                        
+                        <h3 style="color:black; margin-top:2rem;">2. THE ENERGY CRISIS</h3>
+                        <p>With chronic LNG shortages, factories run captive diesel generators at <strong>$0.32/kWh</strong> vs grid <strong>$0.12/kWh</strong>. Running a dyeing line on diesel bleeds margin instantly.</p>
+
+                        <div style="border-left: 3px solid var(--accent); padding-left: 2rem; margin: 3rem 0;">
+                            <p style="font-size: 1.5rem; font-style: italic; color:black;">"A 1% improvement in quality is no longer a marginal gain; it is a $326M defense mechanism."</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="content-image-wrapper">
+                            <img src="index2.webp" class="content-image" data-scroll data-scroll-speed="0.1" alt="Data">
+                        </div>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <h3>$0.32</h3>
+                                <p class="mono" style="color:#555">CAPTIVE COST</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>$2.04B</h3>
+                                <p class="mono" style="color:#555">ANNUAL LOSS</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-black section-padding">
+            <div class="container">
+                <span class="mono">02. COMPETITIVE LANDSCAPE</span>
+                <h2>THE BROWNFIELD GAP</h2>
+                <p>Imported AOI rigs ($12k+) are too expensive. Local ERP has no eyes. We occupy the middle.</p>
+                <div style="margin-top:4rem; border-top:1px solid #333; padding-top:2rem;">
+                    <div class="split-layout">
+                        <div>
+                            <h4 style="color:var(--accent)">INDUSTRIAL-AI.ONE</h4>
+                            <p><strong>~$150/Line</strong>. Edge-Native inference. Stops machines in <200ms.</p>
+                        </div>
+                        <div>
+                            <h4 style="color:#555">LEGACY AUTOMATION</h4>
+                            <p style="color:#555">$12,000/Line. Cloud dependent. High latency. Vendor locked.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ================= PAGE: QC VISION ================= -->
+    <div id="view-qc" class="view-section">
+        <section id="hero">
+            <div class="hero-img-container">
+                <img src="qc-vision1.webp" class="hero-bg" data-scroll data-scroll-speed="-0.5" alt="QC Vision">
+            </div>
+            <div class="container">
+                <span class="mono reveal-text" style="color:var(--teal)">MODULE 01</span>
+                <h1 class="reveal-text"><span>QC VISION</span></h1>
+                <p class="reveal-text"><span>Real-time fabric defect detection on commodity edge hardware.<br>28ms Inference. 92% F1 Score.</span></p>
+            </div>
+        </section>
+
+        <section class="bg-white section-padding">
+            <div class="container">
+                <div class="split-layout">
+                    <div>
+                        <h2 style="color:black">THE HUMAN LIMIT.</h2>
+                        <p>Manual inspection acuity degrades from <strong>70%</strong> to <strong>&lt;40%</strong> over an 8-hour shift due to fatigue. This leads to a 3-5% defect rate.</p>
+                    </div>
+                    <div>
+                        <div class="content-image-wrapper">
+                            <img src="qc-vision2.webp" class="content-image" data-scroll data-scroll-speed="0.1" alt="Defect">
+                        </div>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <h3 style="color:black">38%</h3>
+                                <p class="mono" style="color:#555">DEFECT REDUCTION</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3 style="color:black">$42k</h3>
+                                <p class="mono" style="color:#555">MONTHLY SAVINGS</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-black section-padding">
+            <div class="container">
+                <h2>THE NEURAL STACK</h2>
+                <div class="split-layout">
+                    <div>
+                        <p>We deploy <strong>MicroViT-Tiny-Q8</strong> on recycled smartphones. AI does not blink.</p>
+                        <div class="code-wrapper" style="border-color: var(--teal)">
+                            <div class="mono">
+                                class DefectDetector:<br>
+                                &nbsp;&nbsp;def detect(self, img):<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;# Inference: 28ms on Pi 5<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;features = self.vit.run(None, {"input": img})<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;if np.sum(mask) > 5.0:<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "STOP_LINE_CRITICAL"
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p><strong>Why MicroViT?</strong> DINO-v2 is too heavy. Our quantized model fits in the L2 cache of a Snapdragon 778G, running 3.6x faster.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ================= PAGE: POWER GUARD ================= -->
+    <div id="view-power" class="view-section">
+        <section id="hero">
+            <div class="hero-img-container">
+                <img src="power-guard1.webp" class="hero-bg" data-scroll data-scroll-speed="-0.5" alt="Power Guard">
+            </div>
+            <div class="container">
+                <span class="mono reveal-text" style="color:var(--accent)">MODULE 02</span>
+                <h1 class="reveal-text"><span>POWER GUARD</span></h1>
+                <p class="reveal-text"><span>High-frequency energy analytics.<br>EU CBAM & DPP Compliant.</span></p>
+            </div>
+        </section>
+
+        <section class="bg-white section-padding">
+            <div class="container">
+                <div class="split-layout">
+                    <div>
+                        <h2 style="color:black">THE ARBITRAGE CRISIS.</h2>
+                        <p>Captive diesel costs <strong>$0.32/kWh</strong> vs grid <strong>$0.12/kWh</strong>. Unmonitored "phantom loads" waste another 15%. We need real-time analytics.</p>
+                    </div>
+                    <div>
+                        <div class="content-image-wrapper">
+                            <img src="power-guard2.webp" class="content-image" data-scroll data-scroll-speed="0.1" alt="Graph">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ================= PAGE: FAIL PREDICT ================= -->
+    <div id="view-fail" class="view-section">
+        <section id="hero">
+            <div class="hero-img-container">
+                <img src="fail-predict1.webp" class="hero-bg" data-scroll data-scroll-speed="-0.5" alt="Fail Predict">
+            </div>
+            <div class="container">
+                <span class="mono reveal-text" style="color:#ccc">MODULE 03</span>
+                <h1 class="reveal-text"><span>FAIL PREDICT</span></h1>
+                <p class="reveal-text"><span>Condition-based predictive maintenance.<br>5 Hour Warning. 9.2x ROI.</span></p>
+            </div>
+        </section>
+
+        <section class="bg-white section-padding">
+            <div class="container">
+                <div class="split-layout">
+                    <div>
+                        <h2 style="color:black">PREDICTING THE INVISIBLE.</h2>
+                        <p>Bearings fail long before they get hot. They emit <strong>micro-harmonics</strong>. Using a $1.60 MEMS sensor (MPU-6050), we listen to the machine's heartbeat.</p>
+                    </div>
+                    <div>
+                        <div class="content-image-wrapper">
+                            <img src="fail-predict2.webp" class="content-image" data-scroll data-scroll-speed="0.1" alt="FFT">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-black section-padding" style="border-top:1px solid #333; text-align:center;">
+        <div class="container">
+            <h2 class="mono" style="letter-spacing:0.2em">M0NARQ.AI</h2>
+            <p class="mono" style="opacity:0.4; margin-top:1rem">CHATTOGRAM • DHAKA • GAZIPUR</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. HIGH-END SCROLLING (LENIS) ---
+        // This replicates the "Locomotive" feel
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Sync ScrollTrigger with Lenis
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // --- 2. CUSTOM CURSOR LOGIC ---
+        const cursor = document.querySelector('.cursor');
+        const hoverElements = document.querySelectorAll('[data-cursor-hover]');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.1,
+                ease: 'power2.out'
+            });
+        });
+
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- 3. PARALLAX & REVEAL ANIMATIONS ---
+        function initAnimations() {
+            // Reset any existing triggers
+            ScrollTrigger.getAll().forEach(t => t.kill());
+
+            // Text Reveal Animation (Locomotive Style)
+            document.querySelectorAll('.reveal-text').forEach(el => {
+                ScrollTrigger.create({
+                    trigger: el,
+                    start: "top 85%",
+                    onEnter: () => el.classList.add('is-inview'),
+                });
+            });
+
+            // Image Parallax (using data attributes)
+            document.querySelectorAll('[data-scroll-speed]').forEach(el => {
+                const speed = parseFloat(el.getAttribute('data-scroll-speed'));
+                gsap.to(el, {
+                    y: (i, target) => ScrollTrigger.maxScroll(window) * speed,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: el.parentElement,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 0
+                    }
+                });
+            });
+        }
+
+        // --- 4. VIEW ROUTER (SPA Logic) ---
+        function navigate(viewId) {
+            // Fade out current view
+            const currentView = document.querySelector('.view-section.active');
+            
+            gsap.to(currentView, {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: () => {
+                    // Switch DOM
+                    document.querySelectorAll('.view-section').forEach(el => {
+                        el.classList.remove('active');
+                        el.style.display = 'none';
+                    });
+
+                    const target = document.getElementById('view-' + viewId);
+                    target.style.display = 'block';
+                    target.style.opacity = 0;
+                    target.classList.add('active');
+
+                    // Scroll to top immediately
+                    window.scrollTo(0,0);
+                    lenis.scrollTo(0, {immediate: true});
+
+                    // Fade in new view
+                    gsap.to(target, {
+                        opacity: 1,
+                        duration: 0.8,
+                        onComplete: () => {
+                            initAnimations(); // Re-init ScrollTrigger
+                            ScrollTrigger.refresh();
+                        }
+                    });
+                }
+            });
+
+            // Close Menu
+            toggleMenu();
+        }
+
+        // --- 5. MENU TOGGLE ---
+        function toggleMenu() {
+            const menu = document.getElementById('fsMenu');
+            const isOpen = menu.classList.contains('active');
+            
+            if (!isOpen) {
+                menu.classList.add('active');
+                gsap.fromTo('.menu-link', 
+                    {y: 100, opacity: 0},
+                    {y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power4.out'}
+                );
+            } else {
+                menu.classList.remove('active');
+            }
+        }
+
+        // --- INITIALIZATION ---
+        window.onload = () => {
+            // Hide Preloader
+            gsap.to('.preloader', {
+                yPercent: -100,
+                duration: 1.2,
+                ease: 'power4.inOut',
+                onComplete: () => {
+                    document.querySelector('.preloader').remove();
+                    initAnimations();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
+
+
