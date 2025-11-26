@@ -25,6 +25,7 @@
         </ul>
     </div>
 
+    <!-- HERO -->
     <section id="hero" class="bg-black">
         <img src="fail-predict1.webp" class="hero-bg" alt="Vibration analysis visualization">
         <div class="container">
@@ -34,17 +35,20 @@
         </div>
     </section>
 
-    <!-- PHYSICS OF FAILURE -->
+    <!-- SECTION 1: THE PHYSICS OF FAILURE -->
     <section class="bg-white section-padding">
         <div class="container">
             <div class="split-layout reveal">
                 <div>
                     <h2 style="color:var(--black)">PREDICTING THE INVISIBLE.</h2>
                     <p style="color:#333">
-                        Mechanical faults (pitted bearings, misaligned shafts) emit <strong>micro-harmonics</strong> long before they generate heat or noise.  By attaching a <strong>$1.60 MEMS sensor (MPU-6050)</strong>, we capture 3-axis acceleration data.
+                        Mechanical faults (pitted bearings, misaligned shafts) emit <strong>micro-harmonics</strong> long before they generate heat or audible noise.  By attaching a <strong>$1.60 MEMS sensor (MPU-6050)</strong> to the motor housing, we capture 3-axis acceleration data.
                     </p>
                     <p style="color:#333">
-                        <strong>From Reactive to Predictive:</strong> In our Narayanganj pilot, we reduced spindle downtime from 23 hours/month to just <strong>9 hours</strong>. This moves maintenance from "fix it when it breaks" (costly outage) to "fix it during lunch break" (zero loss).
+                         <strong>The Cost of Silence:</strong> Reactive maintenance ("fix it when it breaks") leads to catastrophic downtime. In the RMG sector, unplanned outages cost <strong>$2.04B</strong> annually. A broken spindle on a knitting machine can ruin 500kg of fabric before it is noticed.
+                    </p>
+                    <p style="color:#333">
+                         <strong>Why Vibration Analysis?</strong> Unlike temperature (which spikes only at the end of failure) or oil analysis (which is slow), vibration provides the earliest possible warning sign.
                     </p>
                     <div class="stat-grid">
                         <div class="stat-item" style="border-color:#999">
@@ -61,12 +65,15 @@
                 </div>
                 <div>
                     <img src="fail-predict2.webp" class="content-image" alt="Frequency spectrum analysis graph">
+                     <p style="font-size:0.9rem; color:#666; margin-top:1rem;">
+                        <strong>Legacy Shortfall:</strong> Handheld vibration meters require a technician to walk around and measure manually. They are sporadic and miss transient faults. Our system monitors 24/7.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- INFERENCE LOGIC -->
+    <!-- SECTION 2: THE INDUSTRIAL BRAIN -->
     <section class="bg-black section-padding">
         <div class="container">
             <h2 class="reveal">THE INDUSTRIAL BRAIN</h2>
@@ -74,37 +81,56 @@
                 <div>
                     <div class="code-wrapper" style="border-left-color: #E0E0E0;">
 <div class="code-block">
+<span class="c"># PREDICTIVE MAINTENANCE ENGINE</span>
+<span class="k">from</span> scipy.fft <span class="k">import</span> fft
+<span class="k">import</span> torch
+
 <span class="k">def</span> <span class="f">predict_rul</span>(sensor_data):
     <span class="c"># 1. Spectral Analysis (FFT)</span>
-    <span class="c"># Convert vibration to frequency domain</span>
+    <span class="c"># Convert raw time-domain vibration to frequency domain</span>
+    <span class="c"># This isolates the "signature" of a bearing fault</span>
     harmonics = fft(sensor_data)
     
     <span class="c"># 2. Physics-Informed Constraint (Pi-Transformer)</span>
-    <span class="c"># Ensures prediction follows degradation physics</span>
+    <span class="c"># GRU model trained on NASA CMAPSS dataset</span>
+    <span class="c"># Pi-Head ensures prediction follows degradation physics</span>
     rul_raw = gru_model(harmonics)
     rul = pi_transformer(rul_raw)
     
     <span class="c"># 3. Action Logic</span>
+    <span class="c"># If Remaining Useful Life < 5 hours, alert maintenance</span>
     <span class="k">if</span> rul < <span class="n">5.0</span>:
         <span class="k">return</span> <span class="s">"SCHEDULE_MAINTENANCE_TONIGHT"</span>
         
     <span class="k">return</span> {<span class="s">"rul_hours"</span>: round(rul, <span class="n">2</span>)}
 </div>
                     </div>
+                     <h3 style="margin-top:2rem; color:var(--white)">IMPLEMENTATION</h3>
+                     <ol style="font-size:0.9rem; color:#aaa; margin-left:1.5rem; margin-top:0.5rem; line-height:1.8;">
+                         <li>Epoxy mount MPU-6050 to Motor Housing ($1.60).</li>
+                         <li>Connect I2C pins to Raspberry Pi Zero W.</li>
+                         <li>Stream X,Y,Z acceleration data via MQTT.</li>
+                         <li>Run FFT script locally to extract harmonics.</li>
+                     </ol>
                 </div>
                 <div>
                     <ul style="list-style:none; border-top:1px solid #333; padding-top:2rem">
                         <li style="margin-bottom:2rem">
                             <span class="mono" style="color:#E0E0E0">PI-TRANSFORMER</span>
-                            <p><strong>Physics-Informed AI.</strong> Standard AI can hallucinate. We add a <strong>Physics-Informed (Pi)</strong> head to our GRU model. This constrains predictions to obey the laws of material degradation, ensuring the AI never predicts "self-healing" machines.</p>
+                            <p><strong>Physics-Informed AI.</strong> Standard AI can hallucinate. We add a <strong>Physics-Informed (Pi)</strong> head to our GRU model. This constrains predictions to obey the laws of material degradation (e.g., steel cannot "heal" itself), improving the F1 score by 0.03.</p>
                         </li>
                         <li style="margin-bottom:2rem">
                             <span class="mono" style="color:#E0E0E0">FEDERATED LEARNING</span>
-                            <p><strong>Collaborative Intelligence.</strong> A factory in Chittagong can learn a new failure mode, and that "wisdom" is securely shared with your factory in Dhaka via encrypted gradients.  Your raw data never leaves your premise, but your AI gets smarter every night.</p>
+                            <p><strong>Collaborative Intelligence.</strong> A factory in Chittagong can learn a new failure mode (e.g., a specific bearing wobble), and that "wisdom" is securely shared with your factory in Dhaka via encrypted gradients. [attachment_0](attachment) Your raw data never leaves your premise, but your AI gets smarter every night.</p>
                         </li>
                     </ul>
                 </div>
             </div>
+             <h3 style="margin-top:4rem; color:var(--white)">BEYOND RMG</h3>
+             <p style="max-width:800px; color:#999;">
+                 <strong>Light Engineering (Bogra):</strong> CNC Lathes require extreme precision. As bearings wear, tolerance drifts. FailPredict detects this drift before parts go out of spec, saving scrap metal.<br><br>
+                 <strong>Jute Spinning:</strong> Jute dust is abrasive and destroys motors. Predictive maintenance is essential for high-uptime jute mills.
+             </p>
         </div>
     </section>
     
@@ -116,3 +142,5 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
